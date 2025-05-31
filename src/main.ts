@@ -2,11 +2,11 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { Env } from "@utils";
 import helmet from "helmet";
-import { initializeTransactionalContext } from "typeorm-transactional";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { initDbConnection } from "@db";
 
 async function bootstrap() {
-	initializeTransactionalContext();
+	await initDbConnection();
 
 	const app = await NestFactory.create(AppModule);
 	app.setGlobalPrefix("/api");
@@ -17,12 +17,14 @@ async function bootstrap() {
 			.setTitle("API Documentation")
 			.setDescription("API Description")
 			.setVersion("1.0")
+			.addBearerAuth()
+			.addServer("http://localhost:3000")
 			.build();
 		const document = SwaggerModule.createDocument(app, config);
 		SwaggerModule.setup("api/docs", app, document);
 	}
-	app.use(helmet());
+	// app.use(helmet());
 
-	await app.listen(Env.LISTEN_PORT);
+	await app.listen(Env.LISTEN_PORT, "0.0.0.0");
 }
 bootstrap();

@@ -1,11 +1,10 @@
+import { UserModule } from "@modules/user";
 import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
-import { SampleModule } from "@modules/sample";
-import { DbModule } from "@db";
 
 @Module({
-	imports: [DbModule, SampleModule],
+	imports: [UserModule],
 	controllers: [],
 	providers: [
 		{

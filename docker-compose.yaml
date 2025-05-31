@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+    ports: 
+      - ${DB_PORT}:27017
+    volumes:
+      - nekolingo_db_vol:/data/db
+    networks:
+      - nekolingo_net
+
+networks:
+  nekolingo_net:
+    name: nekolingo_net
+    driver: bridge
+
+volumes:
+  nekolingo_db_vol:
