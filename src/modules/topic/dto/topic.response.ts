@@ -1,17 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNumber, IsOptional } from "class-validator";
 
-export class CreateTopicRequest {
+export class TopicResponse {
 	@ApiProperty()
-	@IsString()
+	_id: string;
+
+	@ApiProperty()
 	title: string;
 
 	@ApiProperty()
-	@IsNumber()
 	order: number;
 
 	@ApiProperty({ required: false })
-	@IsOptional()
-	@IsString()
 	description?: string;
+
+	@ApiProperty()
+	createdAt: Date;
+
+	@ApiProperty()
+	updatedAt: Date;
 }
