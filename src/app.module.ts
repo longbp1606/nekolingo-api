@@ -1,4 +1,8 @@
+import { CourseModule } from "@modules/course";
+import { ExerciseModule } from "@modules/exercise";
 import { GrammarModule } from "@modules/grammar";
+import { LanguageModule } from "@modules/language";
+import { LessonModule } from "@modules/lesson";
 import { TopicModule } from "@modules/topic";
 import { UserModule } from "@modules/user";
 import { VocabularyModule } from "@modules/vocabulary";
@@ -7,7 +11,16 @@ import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
 
 @Module({
-	imports: [UserModule, TopicModule, GrammarModule, VocabularyModule],
+	imports: [
+		UserModule,
+		TopicModule,
+		GrammarModule,
+		VocabularyModule,
+		LanguageModule,
+		CourseModule,
+		LessonModule,
+		ExerciseModule,
+	],
 	controllers: [],
 	providers: [
 		{
