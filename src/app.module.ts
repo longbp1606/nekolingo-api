@@ -6,6 +6,9 @@ import { LessonModule } from "@modules/lesson";
 import { TopicModule } from "@modules/topic";
 import { UserModule } from "@modules/user";
 import { VocabularyModule } from "@modules/vocabulary";
+import { ArchivementModule } from "@modules/archivement";
+import { UserModule } from "@modules/user";
+import { UserArchivementModule } from "@modules/user-archivement";
 import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
@@ -20,6 +23,8 @@ import { MyExceptionFilter, ValidationPipe } from "@utils";
 		CourseModule,
 		LessonModule,
 		ExerciseModule,
+    ArchivementModule,
+    UserArchivementModule,
 	],
 	controllers: [],
 	providers: [

@@ -6,3 +6,5 @@ export * from "./language.model";
 export * from "./course.model";
 export * from "./lesson.model";
 export * from "./exercise.model";
+export * from "./archivement.model";
+export * from "./user-archivement.model";
