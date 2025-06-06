@@ -34,12 +34,21 @@ export class TopicController {
 	async getTopics(
 		@Query("page") page: number = 1,
 		@Query("take") take: number = 10,
+		@Query("courseId") courseId?: string,
 	) {
 		const { topics, pagination } = await this.topicService.getTopics(
 			page,
 			take,
+			courseId,
 		);
 		return new ApiResponseDto(topics, pagination);
+	}
+
+	@Get("course/:courseId")
+	@SwaggerApiResponse(TopicResponse, { isArray: true })
+	async getTopicsByCourse(@Param("courseId") courseId: string) {
+		const topics = await this.topicService.getTopicsByCourse(courseId);
+		return new ApiResponseDto(topics);
 	}
 
 	@Get(":id")

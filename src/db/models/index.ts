@@ -2,6 +2,7 @@ export * from "./user.model";
 export * from "./topic.model";
 export * from "./grammar.model";
 export * from "./vocabulary.model";
+export * from "./vocab-topic.model";
 export * from "./language.model";
 export * from "./course.model";
 export * from "./lesson.model";
