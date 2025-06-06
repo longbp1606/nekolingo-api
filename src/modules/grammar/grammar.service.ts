@@ -2,60 +2,29 @@ import { Injectable } from "@nestjs/common";
 import { GrammarModel, VocabTopicModel } from "@db/models";
 import { CreateGrammarRequest, UpdateGrammarRequest } from "./dto";
 import { PaginationDto } from "@utils";
-import { ValidationError } from "class-validator";
 import { ApiValidationError, ApiError } from "@errors";
 import { isValidObjectId } from "mongoose";
 
 @Injectable()
 export class GrammarService {
-	async validateBeforeCreate(dto: CreateGrammarRequest) {
-		const errors: ValidationError[] = [];
-		const grammarExists = await GrammarModel.exists({
-			grammar_id: dto.grammar_id,
-		});
-
-		if (grammarExists) {
-			errors.push({
-				property: "grammar_id",
-				constraints: {
-					grammarIdExists: "Grammar ID already exists",
-				},
-			});
-		}
-
-		if (errors.length > 0) {
-			throw new ApiValidationError(errors);
-		}
-	}
-
-	async createGrammar(dto: CreateGrammarRequest) {
-		await this.validateBeforeCreate(dto);
-		const grammar = new GrammarModel(dto);
+	async createGrammar(data: CreateGrammarRequest) {
+		const grammar = new GrammarModel(data);
 		return await grammar.save();
 	}
 
-	async getGrammars(page: number = 1, take: number = 10) {
+	async getGrammars(page = 1, take = 10) {
 		const skip = (page - 1) * take;
 		const [grammars, total] = await Promise.all([
-			GrammarModel.find().skip(skip).limit(take).exec(),
+			GrammarModel.find().skip(skip).limit(take).lean(),
 			GrammarModel.countDocuments(),
 		]);
-
 		const pagination = new PaginationDto(page, take, total);
 		return { grammars, pagination };
 	}
 
 	async getGrammarById(id: string) {
-		if (!isValidObjectId(id)) {
-			throw new ApiError({
-				code: "invalid_id",
-				message: "Invalid grammar ID",
-				detail: null,
-				status: 400,
-			});
-		}
-
-		const grammar = await GrammarModel.findById(id);
+		this.ensureValidId(id);
+		const grammar = await GrammarModel.findById(id).lean();
 		if (!grammar) {
 			throw new ApiError({
 				code: "not_found",
@@ -69,19 +38,13 @@ export class GrammarService {
 	}
 
 	async updateGrammar(id: string, dto: UpdateGrammarRequest) {
-		if (!isValidObjectId(id)) {
-			throw new ApiError({
-				code: "invalid_id",
-				message: "Invalid grammar ID",
-				detail: null,
-				status: 400,
-			});
-		}
-
-		const grammar = await GrammarModel.findByIdAndUpdate(id, dto, {
+		this.ensureValidId(id);
+		const updated = await GrammarModel.findByIdAndUpdate(id, dto, {
 			new: true,
+			lean: true,
 		});
-		if (!grammar) {
+
+		if (!updated) {
 			throw new ApiError({
 				code: "not_found",
 				message: "Grammar not found",
@@ -90,35 +53,11 @@ export class GrammarService {
 			});
 		}
 
-		return grammar;
-	}
-
-	async validateBeforeDelete(id: string) {
-		// Check if grammar is referenced in VocabTopic
-		const vocabTopicReferences = await VocabTopicModel.countDocuments({
-			grammar_id: id,
-		});
-
-		if (vocabTopicReferences > 0) {
-			throw new ApiError({
-				code: "reference_constraint",
-				message: `Cannot delete grammar. It is referenced by ${vocabTopicReferences} VocabTopic(s). Please remove these references first.`,
-				detail: { references: vocabTopicReferences },
-				status: 400,
-			});
-		}
+		return updated;
 	}
 
 	async deleteGrammar(id: string) {
-		if (!isValidObjectId(id)) {
-			throw new ApiError({
-				code: "invalid_id",
-				message: "Invalid grammar ID",
-				detail: null,
-				status: 400,
-			});
-		}
-
+		this.ensureValidId(id);
 		const grammar = await GrammarModel.findById(id);
 		if (!grammar) {
 			throw new ApiError({
@@ -130,7 +69,31 @@ export class GrammarService {
 		}
 
 		await this.validateBeforeDelete(id);
+		await GrammarModel.findByIdAndDelete(id);
+	}
 
-		return await GrammarModel.findByIdAndDelete(id);
+	async validateBeforeDelete(id: string) {
+		const references = await VocabTopicModel.countDocuments({
+			grammar_id: id,
+		});
+		if (references > 0) {
+			throw new ApiError({
+				code: "reference_constraint",
+				message: `Cannot delete grammar. It is referenced by ${references} VocabTopic(s). Please remove these references first.`,
+				detail: { references },
+				status: 400,
+			});
+		}
+	}
+
+	private ensureValidId(id: string) {
+		if (!isValidObjectId(id)) {
+			throw new ApiError({
+				code: "invalid_id",
+				message: "Invalid grammar ID",
+				detail: null,
+				status: 400,
+			});
+		}
 	}
 }

@@ -10,15 +10,20 @@ export class UpdateVocabularyRequest {
 	@ApiProperty({ required: false })
 	@IsOptional()
 	@IsString()
-	pronunciation_us?: string;
-
-	@ApiProperty({ required: false })
-	@IsOptional()
-	@IsString()
-	pronunciation_uk?: string;
-
-	@ApiProperty({ required: false })
-	@IsOptional()
-	@IsString()
 	meaning?: string;
+
+	@ApiProperty({ required: false })
+	@IsOptional()
+	@IsString()
+	language_from?: string;
+
+	@ApiProperty({ required: false })
+	@IsOptional()
+	@IsString()
+	language_to?: string;
+
+	@ApiProperty({ required: false })
+	@IsOptional()
+	@IsString()
+	type?: string;
 }

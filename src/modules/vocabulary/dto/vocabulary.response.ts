@@ -5,19 +5,19 @@ export class VocabularyResponse {
 	_id: string;
 
 	@ApiProperty()
-	vocabulary_id: string;
-
-	@ApiProperty()
 	word: string;
-
-	@ApiProperty({ required: false })
-	pronunciation_us?: string;
-
-	@ApiProperty({ required: false })
-	pronunciation_uk?: string;
 
 	@ApiProperty()
 	meaning: string;
+
+	@ApiProperty()
+	language_from: string;
+
+	@ApiProperty()
+	language_to: string;
+
+	@ApiProperty({ required: false })
+	type?: string;
 
 	@ApiProperty()
 	createdAt: Date;

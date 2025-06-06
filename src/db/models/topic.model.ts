@@ -3,7 +3,7 @@ import mongoose, { HydratedDocument, Model, Schema, Types } from "mongoose";
 export interface ITopic {
 	title: string;
 	order: number;
-	description?: string;
+	icon?: string;
 	course: Types.ObjectId;
 }
 
@@ -15,7 +15,7 @@ const TopicSchema = new Schema<ITopic, TopicModelType>(
 	{
 		title: { type: String, required: true },
 		order: { type: Number, required: true },
-		description: { type: String },
+		icon: { type: String },
 		course: {
 			type: Schema.Types.ObjectId,
 			ref: "Course",
@@ -24,6 +24,8 @@ const TopicSchema = new Schema<ITopic, TopicModelType>(
 	},
 	{ timestamps: true },
 );
+
+TopicSchema.index({ course: 1, order: 1 }, { unique: true });
 
 export const TopicModel = mongoose.model<ITopic, TopicModelType>(
 	"Topic",

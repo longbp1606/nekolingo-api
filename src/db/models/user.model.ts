@@ -9,6 +9,7 @@ export interface IUser {
 	avatar_url: string;
 	current_level: number;
 	xp: number;
+	weekly_xp: number;
 	streak_days: number;
 	language_from: string;
 	language_to: string;
@@ -28,6 +29,7 @@ const UserSchema = new Schema<IUser, UserModelType>(
 		avatar_url: { type: String, required: false },
 		current_level: { type: Number, required: false, default: 1 },
 		xp: { type: Number, required: false, default: 0 },
+		weekly_xp: { type: Number, required: false, default: 0 },
 		streak_days: { type: Number, required: false, default: 0 },
 		language_from: { type: String, required: false },
 		language_to: { type: String, required: false },
