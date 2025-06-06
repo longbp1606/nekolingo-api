@@ -15,6 +15,15 @@ export class CourseService {
 	private async validateBeforeCreate(dto: CreateCourseRequest) {
 		const errors: ValidationError[] = [];
 
+		if (dto.language_from === dto.language_to) {
+			errors.push({
+				property: "language_to",
+				constraints: {
+					conflict: "Language from and Language to must not be the same",
+				},
+			} as ValidationError);
+		}
+
 		const languageFromExists = await LanguageModel.exists({
 			_id: dto.language_from,
 		});
@@ -56,6 +65,7 @@ export class CourseService {
 
 	async createCourse(dto: CreateCourseRequest) {
 		await this.validateBeforeCreate(dto);
+
 		const course = new CourseModel(dto);
 		return await course.save();
 	}
@@ -130,6 +140,22 @@ export class CourseService {
 					},
 				} as ValidationError);
 			}
+		}
+
+		const course = await CourseModel.findById(id);
+		if (!course) {
+			throw new NotFoundException(`Course with ID ${id} not found`);
+		}
+		const from = dto.language_from ?? course.language_from.toString();
+		const to = dto.language_to ?? course.language_to.toString();
+
+		if (from === to) {
+			errors.push({
+				property: "language_to",
+				constraints: {
+					conflict: "Language from and Language to must not be the same",
+				},
+			} as ValidationError);
 		}
 
 		if (errors.length > 0) {

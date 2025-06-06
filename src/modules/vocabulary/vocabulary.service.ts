@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { isValidObjectId } from "mongoose";
-import { VocabularyModel, VocabTopicModel } from "@db/models";
+import { VocabularyModel, VocabTopicModel, LanguageModel } from "@db/models";
 import { CreateVocabularyRequest, UpdateVocabularyRequest } from "./dto";
 import { ApiValidationError, ApiError } from "@errors";
 import { ValidationError } from "class-validator";
@@ -11,20 +11,44 @@ export class VocabularyService {
 	async validateBeforeCreate(dto: CreateVocabularyRequest) {
 		const errors: ValidationError[] = [];
 
+		if (dto.language_from === dto.language_to) {
+			errors.push({
+				property: "language_to",
+				constraints: {
+					conflict: "Source and target languages must not be the same.",
+				},
+			} as ValidationError);
+		}
+
+		const fromExists = await LanguageModel.exists({ _id: dto.language_from });
+		if (!fromExists) {
+			errors.push({
+				property: "language_from",
+				constraints: { exists: "Source language does not exist." },
+			} as ValidationError);
+		}
+
+		const toExists = await LanguageModel.exists({ _id: dto.language_to });
+		if (!toExists) {
+			errors.push({
+				property: "language_to",
+				constraints: { exists: "Target language does not exist." },
+			} as ValidationError);
+		}
+
 		const exists = await VocabularyModel.exists({
 			word: dto.word,
 			language_from: dto.language_from,
 			language_to: dto.language_to,
 		});
-
 		if (exists) {
 			errors.push({
 				property: "word",
 				constraints: {
 					wordExists:
-						"This vocabulary already exists for the selected languages.",
+						"This vocabulary already exists for the selected language pair.",
 				},
-			});
+			} as ValidationError);
 		}
 
 		if (errors.length > 0) {
@@ -57,7 +81,7 @@ export class VocabularyService {
 		if (!isValidObjectId(id)) {
 			throw new ApiError({
 				code: "invalid_id",
-				message: "Invalid vocabulary ID",
+				message: "Invalid vocabulary ID.",
 				detail: null,
 				status: 400,
 			});
@@ -69,7 +93,7 @@ export class VocabularyService {
 		if (!vocabulary) {
 			throw new ApiError({
 				code: "not_found",
-				message: "Vocabulary not found",
+				message: "Vocabulary not found.",
 				detail: null,
 				status: 404,
 			});
@@ -82,24 +106,81 @@ export class VocabularyService {
 		if (!isValidObjectId(id)) {
 			throw new ApiError({
 				code: "invalid_id",
-				message: "Invalid vocabulary ID",
+				message: "Invalid vocabulary ID.",
 				detail: null,
 				status: 400,
 			});
 		}
 
-		const vocabulary = await VocabularyModel.findByIdAndUpdate(id, dto, {
-			new: true,
-		}).populate("language_from language_to");
-
-		if (!vocabulary) {
+		const current = await VocabularyModel.findById(id);
+		if (!current) {
 			throw new ApiError({
 				code: "not_found",
-				message: "Vocabulary not found",
+				message: "Vocabulary not found.",
 				detail: null,
 				status: 404,
 			});
 		}
+
+		const errors: ValidationError[] = [];
+
+		const language_from = dto.language_from ?? current.language_from.toString();
+		const language_to = dto.language_to ?? current.language_to.toString();
+
+		if (language_from === language_to) {
+			errors.push({
+				property: "language_to",
+				constraints: {
+					conflict: "Source and target languages must not be the same.",
+				},
+			} as ValidationError);
+		}
+
+		if (dto.language_from) {
+			const fromExists = await LanguageModel.exists({ _id: dto.language_from });
+			if (!fromExists) {
+				errors.push({
+					property: "language_from",
+					constraints: { exists: "Source language does not exist." },
+				} as ValidationError);
+			}
+		}
+
+		if (dto.language_to) {
+			const toExists = await LanguageModel.exists({ _id: dto.language_to });
+			if (!toExists) {
+				errors.push({
+					property: "language_to",
+					constraints: { exists: "Target language does not exist." },
+				} as ValidationError);
+			}
+		}
+
+		if (dto.word || dto.language_from || dto.language_to) {
+			const exists = await VocabularyModel.exists({
+				_id: { $ne: id },
+				word: dto.word ?? current.word,
+				language_from,
+				language_to,
+			});
+			if (exists) {
+				errors.push({
+					property: "word",
+					constraints: {
+						wordExists:
+							"This vocabulary already exists for the selected language pair.",
+					},
+				} as ValidationError);
+			}
+		}
+
+		if (errors.length > 0) {
+			throw new ApiValidationError(errors);
+		}
+
+		const vocabulary = await VocabularyModel.findByIdAndUpdate(id, dto, {
+			new: true,
+		}).populate("language_from language_to");
 
 		return vocabulary;
 	}
@@ -111,10 +192,10 @@ export class VocabularyService {
 
 		if (vocabTopicReferences > 0) {
 			throw new ApiError({
-				code: "reference_constraint",
-				message: `Cannot delete vocabulary. It is referenced by ${vocabTopicReferences} VocabTopic(s). Please remove these references first.`,
+				code: "conflict",
+				message: `Cannot delete this vocabulary. It is referenced by ${vocabTopicReferences} topic(s). Please remove those references first.`,
 				detail: { references: vocabTopicReferences },
-				status: 400,
+				status: 409,
 			});
 		}
 	}
@@ -123,7 +204,7 @@ export class VocabularyService {
 		if (!isValidObjectId(id)) {
 			throw new ApiError({
 				code: "invalid_id",
-				message: "Invalid vocabulary ID",
+				message: "Invalid vocabulary ID.",
 				detail: null,
 				status: 400,
 			});
@@ -133,7 +214,7 @@ export class VocabularyService {
 		if (!vocabulary) {
 			throw new ApiError({
 				code: "not_found",
-				message: "Vocabulary not found",
+				message: "Vocabulary not found.",
 				detail: null,
 				status: 404,
 			});
