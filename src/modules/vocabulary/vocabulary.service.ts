@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { VocabularyModel } from "@db/models";
+import { VocabularyModel, VocabTopicModel } from "@db/models";
 import { CreateVocabularyRequest, UpdateVocabularyRequest } from "./dto";
 import { PaginationDto } from "@utils";
 import { ValidationError } from "class-validator";
-import { ApiValidationError } from "@errors";
+import { ApiValidationError, ApiError } from "@errors";
+import { isValidObjectId } from "mongoose";
 
 @Injectable()
 export class VocabularyService {
@@ -45,14 +46,91 @@ export class VocabularyService {
 	}
 
 	async getVocabularyById(id: string) {
-		return await VocabularyModel.findById(id);
+		if (!isValidObjectId(id)) {
+			throw new ApiError({
+				code: "invalid_id",
+				message: "Invalid vocabulary ID",
+				detail: null,
+				status: 400,
+			});
+		}
+
+		const vocabulary = await VocabularyModel.findById(id);
+		if (!vocabulary) {
+			throw new ApiError({
+				code: "not_found",
+				message: "Vocabulary not found",
+				detail: null,
+				status: 404,
+			});
+		}
+
+		return vocabulary;
 	}
 
 	async updateVocabulary(id: string, dto: UpdateVocabularyRequest) {
-		return await VocabularyModel.findByIdAndUpdate(id, dto, { new: true });
+		if (!isValidObjectId(id)) {
+			throw new ApiError({
+				code: "invalid_id",
+				message: "Invalid vocabulary ID",
+				detail: null,
+				status: 400,
+			});
+		}
+
+		const vocabulary = await VocabularyModel.findByIdAndUpdate(id, dto, {
+			new: true,
+		});
+		if (!vocabulary) {
+			throw new ApiError({
+				code: "not_found",
+				message: "Vocabulary not found",
+				detail: null,
+				status: 404,
+			});
+		}
+
+		return vocabulary;
+	}
+
+	async validateBeforeDelete(id: string) {
+		// Check if vocabulary is referenced in VocabTopic
+		const vocabTopicReferences = await VocabTopicModel.countDocuments({
+			vocabulary_id: id,
+		});
+
+		if (vocabTopicReferences > 0) {
+			throw new ApiError({
+				code: "reference_constraint",
+				message: `Cannot delete vocabulary. It is referenced by ${vocabTopicReferences} VocabTopic(s). Please remove these references first.`,
+				detail: { references: vocabTopicReferences },
+				status: 400,
+			});
+		}
 	}
 
 	async deleteVocabulary(id: string) {
+		if (!isValidObjectId(id)) {
+			throw new ApiError({
+				code: "invalid_id",
+				message: "Invalid vocabulary ID",
+				detail: null,
+				status: 400,
+			});
+		}
+
+		const vocabulary = await VocabularyModel.findById(id);
+		if (!vocabulary) {
+			throw new ApiError({
+				code: "not_found",
+				message: "Vocabulary not found",
+				detail: null,
+				status: 404,
+			});
+		}
+
+		await this.validateBeforeDelete(id);
+
 		return await VocabularyModel.findByIdAndDelete(id);
 	}
 }
