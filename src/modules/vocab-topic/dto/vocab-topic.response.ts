@@ -1,20 +1,23 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class TopicResponse {
+export class VocabTopicResponse {
 	@ApiProperty()
 	_id: string;
 
 	@ApiProperty()
-	title: string;
+	topic: string;
+
+	@ApiProperty({ required: false })
+	vocabulary?: string;
+
+	@ApiProperty({ required: false })
+	grammar?: string;
 
 	@ApiProperty()
 	order: number;
 
-	@ApiProperty({ required: false })
-	description?: string;
-
 	@ApiProperty()
-	course: string;
+	is_required: boolean;
 
 	@ApiProperty()
 	createdAt: Date;

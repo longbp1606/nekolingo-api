@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { GrammarModel } from "@db/models";
+import { GrammarModel, VocabTopicModel } from "@db/models";
 import { CreateGrammarRequest, UpdateGrammarRequest } from "./dto";
 import { PaginationDto } from "@utils";
 import { ValidationError } from "class-validator";
-import { ApiValidationError } from "@errors";
+import { ApiValidationError, ApiError } from "@errors";
+import { isValidObjectId } from "mongoose";
 
 @Injectable()
 export class GrammarService {
@@ -45,14 +46,91 @@ export class GrammarService {
 	}
 
 	async getGrammarById(id: string) {
-		return await GrammarModel.findById(id);
+		if (!isValidObjectId(id)) {
+			throw new ApiError({
+				code: "invalid_id",
+				message: "Invalid grammar ID",
+				detail: null,
+				status: 400,
+			});
+		}
+
+		const grammar = await GrammarModel.findById(id);
+		if (!grammar) {
+			throw new ApiError({
+				code: "not_found",
+				message: "Grammar not found",
+				detail: null,
+				status: 404,
+			});
+		}
+
+		return grammar;
 	}
 
 	async updateGrammar(id: string, dto: UpdateGrammarRequest) {
-		return await GrammarModel.findByIdAndUpdate(id, dto, { new: true });
+		if (!isValidObjectId(id)) {
+			throw new ApiError({
+				code: "invalid_id",
+				message: "Invalid grammar ID",
+				detail: null,
+				status: 400,
+			});
+		}
+
+		const grammar = await GrammarModel.findByIdAndUpdate(id, dto, {
+			new: true,
+		});
+		if (!grammar) {
+			throw new ApiError({
+				code: "not_found",
+				message: "Grammar not found",
+				detail: null,
+				status: 404,
+			});
+		}
+
+		return grammar;
+	}
+
+	async validateBeforeDelete(id: string) {
+		// Check if grammar is referenced in VocabTopic
+		const vocabTopicReferences = await VocabTopicModel.countDocuments({
+			grammar_id: id,
+		});
+
+		if (vocabTopicReferences > 0) {
+			throw new ApiError({
+				code: "reference_constraint",
+				message: `Cannot delete grammar. It is referenced by ${vocabTopicReferences} VocabTopic(s). Please remove these references first.`,
+				detail: { references: vocabTopicReferences },
+				status: 400,
+			});
+		}
 	}
 
 	async deleteGrammar(id: string) {
+		if (!isValidObjectId(id)) {
+			throw new ApiError({
+				code: "invalid_id",
+				message: "Invalid grammar ID",
+				detail: null,
+				status: 400,
+			});
+		}
+
+		const grammar = await GrammarModel.findById(id);
+		if (!grammar) {
+			throw new ApiError({
+				code: "not_found",
+				message: "Grammar not found",
+				detail: null,
+				status: 404,
+			});
+		}
+
+		await this.validateBeforeDelete(id);
+
 		return await GrammarModel.findByIdAndDelete(id);
 	}
 }

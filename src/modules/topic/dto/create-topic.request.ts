@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNumber, IsOptional } from "class-validator";
+import { IsString, IsNumber, IsOptional, IsMongoId } from "class-validator";
 
 export class CreateTopicRequest {
 	@ApiProperty()
@@ -14,4 +14,8 @@ export class CreateTopicRequest {
 	@IsOptional()
 	@IsString()
 	description?: string;
+
+	@ApiProperty()
+	@IsMongoId()
+	course: string;
 }
