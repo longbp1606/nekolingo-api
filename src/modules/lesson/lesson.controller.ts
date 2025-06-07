@@ -30,11 +30,7 @@ export class LessonController {
 	@Post()
 	@ApiOperation({ summary: "Tạo mới một bài học" })
 	@ApiBody({ type: CreateLessonRequest })
-	@ApiResponse({
-		status: 201,
-		description: "Bài học được tạo thành công",
-		type: LessonModel,
-	})
+	@ApiResponse({ status: 201, type: LessonModel })
 	@ApiResponse({ status: 400, description: "Lỗi validation" })
 	async create(@Body() dto: CreateLessonRequest) {
 		return this.svc.createLesson(dto);
@@ -57,49 +53,40 @@ export class LessonController {
 			},
 		},
 	})
-	async findAll(@Query("page") page: string, @Query("take") take: string) {
-		const p = parseInt(page) > 0 ? parseInt(page) : 1;
-		const t = parseInt(take) > 0 ? parseInt(take) : 10;
+	async findAll(@Query("page") page = "1", @Query("take") take = "10") {
+		const p = Math.max(1, parseInt(page, 10));
+		const t = Math.max(1, parseInt(take, 10));
 		return this.svc.getLessons(p, t);
 	}
 
 	@Get(":id")
 	@ApiOperation({ summary: "Lấy chi tiết một bài học theo ID" })
 	@ApiParam({ name: "id", description: "ID của bài học" })
-	@ApiResponse({
-		status: 200,
-		description: "Trả về một bài học",
-		type: LessonModel,
-	})
-	@ApiResponse({ status: 404, description: "Bài học không tìm thấy" })
+	@ApiResponse({ status: 200, type: LessonModel })
+	@ApiResponse({ status: 404, description: "Không tìm thấy bài học" })
 	async findOne(@Param("id") id: string) {
 		return this.svc.getLessonById(id);
 	}
 
 	@Patch(":id")
-	@ApiOperation({ summary: "Cập nhật một bài học theo ID" })
+	@ApiOperation({ summary: "Cập nhật bài học theo ID" })
 	@ApiParam({ name: "id", description: "ID của bài học" })
 	@ApiBody({ type: UpdateLessonRequest })
-	@ApiResponse({
-		status: 200,
-		description: "Cập nhật thành công",
-		type: LessonModel,
-	})
+	@ApiResponse({ status: 200, type: LessonModel })
 	@ApiResponse({ status: 400, description: "Lỗi validation" })
-	@ApiResponse({ status: 404, description: "Bài học không tìm thấy" })
+	@ApiResponse({ status: 404, description: "Không tìm thấy bài học" })
 	async update(@Param("id") id: string, @Body() dto: UpdateLessonRequest) {
 		return this.svc.updateLesson(id, dto);
 	}
 
 	@Delete(":id")
-	@ApiOperation({ summary: "Xóa một bài học theo ID" })
+	@ApiOperation({ summary: "Xóa bài học theo ID" })
 	@ApiParam({ name: "id", description: "ID của bài học" })
 	@ApiResponse({
 		status: 200,
-		description: "Xóa thành công",
 		schema: { example: { message: "Deleted successfully" } },
 	})
-	@ApiResponse({ status: 404, description: "Bài học không tìm thấy" })
+	@ApiResponse({ status: 404, description: "Không tìm thấy bài học" })
 	@HttpCode(HttpStatus.OK)
 	async remove(@Param("id") id: string) {
 		return this.svc.deleteLesson(id);

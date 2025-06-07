@@ -1,11 +1,11 @@
-import mongoose, { HydratedDocument, Model, Schema } from "mongoose";
+import mongoose, { HydratedDocument, Model, Schema, Types } from "mongoose";
 
 export interface IVocabulary {
-	vocabulary_id: string;
 	word: string;
-	pronunciation_us?: string;
-	pronunciation_uk?: string;
 	meaning: string;
+	language_from: Types.ObjectId;
+	language_to: Types.ObjectId;
+	type?: string;
 }
 
 export type VocabularyDocumentType = HydratedDocument<IVocabulary>;
@@ -20,11 +20,19 @@ export type VocabularyModelType = Model<
 
 const VocabularySchema = new Schema<IVocabulary, VocabularyModelType>(
 	{
-		vocabulary_id: { type: String, required: true, unique: true },
 		word: { type: String, required: true },
-		pronunciation_us: { type: String },
-		pronunciation_uk: { type: String },
 		meaning: { type: String, required: true },
+		type: { type: String },
+		language_from: {
+			type: Schema.Types.ObjectId,
+			ref: "Language",
+			required: true,
+		},
+		language_to: {
+			type: Schema.Types.ObjectId,
+			ref: "Language",
+			required: true,
+		},
 	},
 	{ timestamps: true },
 );

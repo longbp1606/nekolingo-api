@@ -20,6 +20,7 @@ import {
 	UpdateGrammarRequest,
 	GrammarResponse,
 } from "./dto";
+import { plainToInstance } from "class-transformer";
 
 @ApiTags("Grammar")
 @Controller("grammar")
@@ -28,29 +29,31 @@ export class GrammarController {
 
 	@Post()
 	@SwaggerApiResponse(GrammarResponse)
-	async createGrammar(@Body() dto: CreateGrammarRequest) {
-		const grammar = await this.grammarService.createGrammar(dto);
-		return new ApiResponseDto(grammar, null, "Grammar created successfully");
+	async createGrammar(@Body() body: CreateGrammarRequest) {
+		const grammar = await this.grammarService.createGrammar(body);
+		return new ApiResponseDto(
+			plainToInstance(GrammarResponse, grammar),
+			null,
+			"Grammar created successfully",
+		);
 	}
 
 	@Get()
 	@SwaggerApiResponse(GrammarResponse, { isArray: true, withPagination: true })
-	async getGrammars(
-		@Query("page") page: number = 1,
-		@Query("take") take: number = 10,
-	) {
+	async getGrammars(@Query("page") page = 1, @Query("take") take = 10) {
 		const { grammars, pagination } = await this.grammarService.getGrammars(
 			page,
 			take,
 		);
-		return new ApiResponseDto(grammars, pagination);
+		const results = grammars.map((g) => plainToInstance(GrammarResponse, g));
+		return new ApiResponseDto(results, pagination);
 	}
 
 	@Get(":id")
 	@SwaggerApiResponse(GrammarResponse)
 	async getGrammarById(@Param("id") id: string) {
 		const grammar = await this.grammarService.getGrammarById(id);
-		return new ApiResponseDto(grammar);
+		return new ApiResponseDto(plainToInstance(GrammarResponse, grammar));
 	}
 
 	@Put(":id")
@@ -60,7 +63,11 @@ export class GrammarController {
 		@Body() dto: UpdateGrammarRequest,
 	) {
 		const grammar = await this.grammarService.updateGrammar(id, dto);
-		return new ApiResponseDto(grammar, null, "Grammar updated successfully");
+		return new ApiResponseDto(
+			plainToInstance(GrammarResponse, grammar),
+			null,
+			"Grammar updated successfully",
+		);
 	}
 
 	@Delete(":id")

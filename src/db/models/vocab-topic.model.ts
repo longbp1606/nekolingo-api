@@ -41,7 +41,6 @@ const VocabTopicSchema = new Schema<IVocabTopic, VocabTopicModelType>(
 	{ timestamps: true },
 );
 
-// Ensure at least one of vocabulary or grammar is provided
 VocabTopicSchema.pre("save", function () {
 	if (!this.vocabulary && !this.grammar) {
 		throw new Error(
@@ -50,7 +49,6 @@ VocabTopicSchema.pre("save", function () {
 	}
 });
 
-// Create compound index for topic + order
 VocabTopicSchema.index({ topic: 1, order: 1 });
 
 export const VocabTopicModel = mongoose.model<IVocabTopic, VocabTopicModelType>(

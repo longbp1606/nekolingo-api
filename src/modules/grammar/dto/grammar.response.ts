@@ -5,13 +5,13 @@ export class GrammarResponse {
 	_id: string;
 
 	@ApiProperty()
-	grammar_id: string;
-
-	@ApiProperty()
 	name: string;
 
 	@ApiProperty()
 	description: string;
+
+	@ApiProperty()
+	condition: string;
 
 	@ApiProperty()
 	createdAt: Date;

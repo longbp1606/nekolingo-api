@@ -1,8 +1,4 @@
-import {
-	Injectable,
-	NotFoundException,
-	BadRequestException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import {
 	ExerciseModel,
 	LessonModel,
@@ -58,7 +54,6 @@ export class ExerciseService {
 			lesson: dto.lesson,
 			question: dto.question,
 		});
-
 		if (exists) {
 			errors.push({
 				property: "question",
@@ -88,7 +83,7 @@ export class ExerciseService {
 				.limit(take)
 				.populate("lesson", "title")
 				.populate("vocabulary", "word")
-				.populate("grammar", "title")
+				.populate("grammar", "name")
 				.exec(),
 			ExerciseModel.countDocuments().exec(),
 		]);
@@ -103,7 +98,7 @@ export class ExerciseService {
 		const ex = await ExerciseModel.findById(id)
 			.populate("lesson", "title")
 			.populate("vocabulary", "word")
-			.populate("grammar", "title")
+			.populate("grammar", "name")
 			.exec();
 		if (!ex) {
 			throw new NotFoundException(`Exercise with ID ${id} not found`);
@@ -141,7 +136,7 @@ export class ExerciseService {
 		})
 			.populate("lesson", "title")
 			.populate("vocabulary", "word")
-			.populate("grammar", "title")
+			.populate("grammar", "name")
 			.exec();
 
 		if (!updated) {

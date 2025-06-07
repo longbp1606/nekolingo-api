@@ -1,5 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsMongoId, IsNumber, IsString } from "class-validator";
+import {
+	IsEnum,
+	IsMongoId,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsString,
+} from "class-validator";
 
 export class CreateLessonRequest {
 	@ApiProperty({
@@ -7,6 +14,7 @@ export class CreateLessonRequest {
 		description: "Tiêu đề bài học",
 	})
 	@IsString()
+	@IsNotEmpty()
 	title: string;
 
 	@ApiProperty({
@@ -16,15 +24,34 @@ export class CreateLessonRequest {
 	@IsNumber()
 	order: number;
 
-	@ApiProperty({ example: 50, description: "XP thưởng khi hoàn thành" })
+	@ApiProperty({
+		example: 50,
+		description: "XP thưởng khi hoàn thành",
+	})
 	@IsNumber()
 	xp_reward: number;
 
 	@ApiProperty({
-		example: "608e5c7a9b1d2a4b5c6d7e8f",
+		example: "665f2d439b61bdf74e06b7d5",
 		description: "ID của Topic",
-		type: String,
 	})
 	@IsMongoId()
 	topic: string;
+
+	@ApiProperty({
+		example: "vocabulary",
+		enum: ["vocabulary", "grammar", "listening", "reading", "speaking"],
+		description: "Loại bài học",
+	})
+	@IsEnum(["vocabulary", "grammar", "listening", "reading", "speaking"])
+	type: "vocabulary" | "grammar" | "listening" | "reading" | "speaking";
+
+	@ApiProperty({
+		example: "Bài học giới thiệu các từ vựng cơ bản.",
+		description: "Mô tả ngắn gọn về bài học",
+		required: false,
+	})
+	@IsOptional()
+	@IsString()
+	description?: string;
 }

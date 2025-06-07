@@ -20,7 +20,6 @@ export class TopicService {
 	async validateBeforeCreate(dto: CreateTopicRequest) {
 		const errors: ValidationError[] = [];
 
-		// Validate course exists
 		if (!Types.ObjectId.isValid(dto.course)) {
 			errors.push({
 				property: "course",
@@ -106,13 +105,11 @@ export class TopicService {
 			throw new NotFoundException(`Invalid ID: ${id}`);
 		}
 
-		// Check if topic has lessons
 		const hasLessons = await LessonModel.exists({ topic: id });
 		if (hasLessons) {
 			throw new BadRequestException("Cannot delete topic that has lessons");
 		}
 
-		// Check if topic has vocab topics
 		const hasVocabTopics = await VocabTopicModel.exists({ topic: id });
 		if (hasVocabTopics) {
 			throw new BadRequestException(

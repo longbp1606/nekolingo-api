@@ -6,15 +6,15 @@ import {
 import { LessonModel, TopicModel, ExerciseModel } from "@db/models";
 import { CreateLessonRequest, UpdateLessonRequest } from "./dto";
 import { PaginationDto } from "@utils";
-import { ValidationError } from "class-validator";
 import { ApiValidationError } from "@errors";
 import { Types } from "mongoose";
+import { ValidationError } from "class-validator";
 
 @Injectable()
 export class LessonService {
 	private async validateReferences(
 		dto: CreateLessonRequest | UpdateLessonRequest,
-	) {
+	): Promise<void> {
 		const errors: ValidationError[] = [];
 
 		if (dto.topic && !(await TopicModel.exists({ _id: dto.topic }))) {
@@ -24,64 +24,66 @@ export class LessonService {
 			} as ValidationError);
 		}
 
-		if (errors.length > 0) {
+		if (errors.length) {
 			throw new ApiValidationError(errors);
 		}
 	}
 
-	private async validateBeforeCreate(dto: CreateLessonRequest) {
-		const errors: ValidationError[] = [];
-
+	private async validateBeforeCreate(dto: CreateLessonRequest): Promise<void> {
 		const exists = await LessonModel.exists({
 			topic: dto.topic,
 			order: dto.order,
 		});
 
 		if (exists) {
-			errors.push({
-				property: "order",
-				constraints: {
-					unique: "A lesson with this order already exists in the same topic",
-				},
-			} as ValidationError);
-		}
-
-		if (errors.length > 0) {
-			throw new ApiValidationError(errors);
+			throw new ApiValidationError([
+				{
+					property: "order",
+					constraints: {
+						unique: "A lesson with this order already exists in the same topic",
+					},
+				} as ValidationError,
+			]);
 		}
 	}
 
 	async createLesson(dto: CreateLessonRequest) {
 		await this.validateReferences(dto);
 		await this.validateBeforeCreate(dto);
-		const lesson = new LessonModel(dto);
-		return await lesson.save();
+		return new LessonModel(dto).save();
 	}
 
-	async getLessons(page: number = 1, take: number = 10) {
+	async getLessons(page = 1, take = 10) {
 		const skip = (page - 1) * take;
+
 		const [lessons, total] = await Promise.all([
 			LessonModel.find()
 				.skip(skip)
 				.limit(take)
 				.populate("topic", "title")
 				.exec(),
-			LessonModel.countDocuments().exec(),
+			LessonModel.countDocuments(),
 		]);
-		const pagination = new PaginationDto(page, take, total);
-		return { lessons, pagination };
+
+		return {
+			lessons,
+			pagination: new PaginationDto(page, take, total),
+		};
 	}
 
 	async getLessonById(id: string) {
 		if (!Types.ObjectId.isValid(id)) {
 			throw new NotFoundException(`Invalid ID: ${id}`);
 		}
+
 		const lesson = await LessonModel.findById(id)
 			.populate("topic", "title")
 			.exec();
+
 		if (!lesson) {
 			throw new NotFoundException(`Lesson with ID ${id} not found`);
 		}
+
 		return lesson;
 	}
 
@@ -93,7 +95,7 @@ export class LessonService {
 		await this.validateReferences(dto);
 
 		if (dto.order || dto.topic) {
-			const filter: any = { _id: { $ne: id } };
+			const filter: Record<string, any> = { _id: { $ne: id } };
 			if (dto.order) filter.order = dto.order;
 			if (dto.topic) filter.topic = dto.topic;
 
@@ -111,7 +113,9 @@ export class LessonService {
 			}
 		}
 
-		const updated = await LessonModel.findByIdAndUpdate(id, dto, { new: true })
+		const updated = await LessonModel.findByIdAndUpdate(id, dto, {
+			new: true,
+		})
 			.populate("topic", "title")
 			.exec();
 
