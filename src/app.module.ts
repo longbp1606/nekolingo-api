@@ -12,9 +12,11 @@ import { UserArchivementModule } from "@modules/user-archivement";
 import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
+import { AuthGuard, AuthModule } from "@modules/auth";
 
 @Module({
 	imports: [
+		AuthModule,
 		UserModule,
 		TopicModule,
 		GrammarModule,
@@ -36,6 +38,10 @@ import { MyExceptionFilter, ValidationPipe } from "@utils";
 		{
 			provide: APP_PIPE,
 			useClass: ValidationPipe,
+		},
+		{
+			provide: "APP_GUARD",
+			useClass: AuthGuard,
 		},
 	],
 })
