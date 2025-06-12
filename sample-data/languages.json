@@ -1,0 +1,34 @@
+[
+	{
+		"id": "675a1234567890abcdef0001",
+		"name": "English",
+		"code": "en",
+		"flag_url": "🇺🇸",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef0002",
+		"name": "Vietnamese",
+		"code": "vi",
+		"flag_url": "🇻🇳",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef0003",
+		"name": "Spanish",
+		"code": "es",
+		"flag_url": "🇪🇸",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef0004",
+		"name": "French",
+		"code": "fr",
+		"flag_url": "🇫🇷",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	}
+]

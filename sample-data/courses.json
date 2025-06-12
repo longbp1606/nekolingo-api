@@ -1,0 +1,20 @@
+[
+	{
+		"id": "675a1234567890abcdef1001",
+		"title": "Vietnamese for English Speakers - Beginner",
+		"description": "Learn basic Vietnamese for everyday conversations and interactions. Perfect for beginners who want to start their Vietnamese journey.",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef1002",
+		"title": "English for Vietnamese Speakers - Beginner",
+		"description": "Learn basic English for Vietnamese speakers. Start your English learning journey with essential vocabulary and grammar.",
+		"language_from": "675a1234567890abcdef0002",
+		"language_to": "675a1234567890abcdef0001",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	}
+]
