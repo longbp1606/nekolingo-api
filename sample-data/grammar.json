@@ -1,0 +1,58 @@
+[
+	{
+		"id": "675a1234567890abcdef6001",
+		"name": "Introduction Structure",
+		"description": "How to introduce yourself in Vietnamese: Tôi tên là [name]",
+		"condition": "Subject + tên là + Name",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef6002",
+		"name": "Basic Sentence Structure",
+		"description": "Subject + Verb + Object structure in Vietnamese",
+		"condition": "S + V + O",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef6003",
+		"name": "Question Formation",
+		"description": "How to form questions in Vietnamese using question words",
+		"condition": "Question word + subject + verb + object + không?",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef6004",
+		"name": "Possession Structure",
+		"description": "How to express possession in Vietnamese",
+		"condition": "Subject + của + Possessor",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef6051",
+		"name": "Present Simple",
+		"description": "How to form present simple tense in English",
+		"condition": "Subject + verb(s) + object",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef6052",
+		"name": "Question Formation English",
+		"description": "How to form questions in English",
+		"condition": "Do/Does + subject + base verb + object?",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef6053",
+		"name": "Past Tense",
+		"description": "How to form past tense in English",
+		"condition": "Subject + verb(-ed) + object",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	}
+]

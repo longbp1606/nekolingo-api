@@ -1,0 +1,212 @@
+[
+	{
+		"id": "675a1234567890abcdef5001",
+		"word": "xin chào",
+		"meaning": "hello",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "greeting",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5002",
+		"word": "tạm biệt",
+		"meaning": "goodbye",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "greeting",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5003",
+		"word": "cảm ơn",
+		"meaning": "thank you",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "polite",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5004",
+		"word": "xin lỗi",
+		"meaning": "sorry",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "polite",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5005",
+		"word": "gia đình",
+		"meaning": "family",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "family",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5006",
+		"word": "bố",
+		"meaning": "father",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "family",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5007",
+		"word": "mẹ",
+		"meaning": "mother",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "family",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5008",
+		"word": "anh",
+		"meaning": "older brother",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "family",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5009",
+		"word": "chị",
+		"meaning": "older sister",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "family",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5010",
+		"word": "em",
+		"meaning": "younger sibling",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "family",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5011",
+		"word": "cơm",
+		"meaning": "rice",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "food",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5012",
+		"word": "nước",
+		"meaning": "water",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "food",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5013",
+		"word": "xe buýt",
+		"meaning": "bus",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "transport",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5014",
+		"word": "xe máy",
+		"meaning": "motorbike",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "transport",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5015",
+		"word": "tiền",
+		"meaning": "money",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "money",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5016",
+		"word": "mua",
+		"meaning": "buy",
+		"language_from": "675a1234567890abcdef0001",
+		"language_to": "675a1234567890abcdef0002",
+		"type": "action",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5051",
+		"word": "How are you?",
+		"meaning": "Bạn có khỏe không?",
+		"language_from": "675a1234567890abcdef0002",
+		"language_to": "675a1234567890abcdef0001",
+		"type": "conversation",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5052",
+		"word": "Nice to meet you",
+		"meaning": "Rất vui được gặp bạn",
+		"language_from": "675a1234567890abcdef0002",
+		"language_to": "675a1234567890abcdef0001",
+		"type": "conversation",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5053",
+		"word": "What's your name?",
+		"meaning": "Tên bạn là gì?",
+		"language_from": "675a1234567890abcdef0002",
+		"language_to": "675a1234567890abcdef0001",
+		"type": "conversation",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5054",
+		"word": "teacher",
+		"meaning": "giáo viên",
+		"language_from": "675a1234567890abcdef0002",
+		"language_to": "675a1234567890abcdef0001",
+		"type": "work",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	},
+	{
+		"id": "675a1234567890abcdef5055",
+		"word": "student",
+		"meaning": "học sinh",
+		"language_from": "675a1234567890abcdef0002",
+		"language_to": "675a1234567890abcdef0001",
+		"type": "work",
+		"createdAt": "2024-12-01T00:00:00Z",
+		"updatedAt": "2024-12-01T00:00:00Z"
+	}
+]
