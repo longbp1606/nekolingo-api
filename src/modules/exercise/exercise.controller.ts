@@ -19,10 +19,12 @@ import {
 	ApiQuery,
 	ApiParam,
 	ApiBody,
+	ApiBearerAuth,
 } from "@nestjs/swagger";
 import { ExerciseModel } from "@db/models";
 
 @ApiTags("Exercise")
+@ApiBearerAuth()
 @Controller("exercise")
 export class ExerciseController {
 	constructor(private readonly svc: ExerciseService) {}

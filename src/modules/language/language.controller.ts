@@ -19,10 +19,12 @@ import {
 	ApiQuery,
 	ApiParam,
 	ApiBody,
+	ApiBearerAuth,
 } from "@nestjs/swagger";
 import { LanguageModel } from "@db/models";
 
 @ApiTags("Language")
+@ApiBearerAuth()
 @Controller("language")
 export class LanguageController {
 	constructor(private readonly svc: LanguageService) {}

@@ -72,19 +72,18 @@ export class LessonService {
 	}
 
 	async getLessonById(id: string) {
-		if (!Types.ObjectId.isValid(id)) {
-			throw new NotFoundException(`Invalid ID: ${id}`);
-		}
-
 		const lesson = await LessonModel.findById(id)
 			.populate("topic", "title")
-			.exec();
+			.lean();
+		const exercises = await ExerciseModel.find({ lesson: id })
+			.populate("vocabulary", "word")
+			.populate("grammar", "name")
+			.lean();
 
-		if (!lesson) {
-			throw new NotFoundException(`Lesson with ID ${id} not found`);
-		}
-
-		return lesson;
+		return {
+			...lesson,
+			exercises,
+		};
 	}
 
 	async updateLesson(id: string, dto: UpdateLessonRequest) {
