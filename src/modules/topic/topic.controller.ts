@@ -8,7 +8,7 @@ import {
 	Put,
 	Query,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { TopicService } from "./topic.service";
 import {
 	ApiResponseDto,
@@ -18,6 +18,7 @@ import {
 import { CreateTopicRequest, UpdateTopicRequest, TopicResponse } from "./dto";
 
 @ApiTags("Topic")
+@ApiBearerAuth()
 @Controller("topic")
 export class TopicController {
 	constructor(private readonly topicService: TopicService) {}

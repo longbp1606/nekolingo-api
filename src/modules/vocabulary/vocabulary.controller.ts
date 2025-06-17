@@ -8,7 +8,7 @@ import {
 	Put,
 	Query,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { VocabularyService } from "./vocabulary.service";
 import {
 	ApiResponseDto,
@@ -22,6 +22,7 @@ import {
 } from "./dto";
 
 @ApiTags("Vocabulary")
+@ApiBearerAuth()
 @Controller("vocabulary")
 export class VocabularyController {
 	constructor(private readonly vocabularyService: VocabularyService) {}
