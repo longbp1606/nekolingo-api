@@ -180,7 +180,9 @@ export class VocabularyService {
 
 		const vocabulary = await VocabularyModel.findByIdAndUpdate(id, dto, {
 			new: true,
-		}).populate("language_from language_to");
+		})
+			.populate("language_from", "name")
+			.populate("language_to", "name");
 
 		return vocabulary;
 	}
