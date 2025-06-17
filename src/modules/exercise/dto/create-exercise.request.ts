@@ -44,11 +44,7 @@ export class CreateExerciseRequest {
 		description:
 			"Đáp án đúng. Có thể là string, mảng string, number hoặc object",
 	})
-	@IsOptional()
-	@ValidateIf((o) => typeof o.correct_answer === "string")
 	@IsString()
-	@ValidateIf((o) => Array.isArray(o.correct_answer))
-	@IsArray()
 	correct_answer: any;
 
 	@ApiPropertyOptional({ type: [String] })

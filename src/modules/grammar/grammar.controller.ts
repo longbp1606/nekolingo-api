@@ -8,7 +8,7 @@ import {
 	Put,
 	Query,
 } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { GrammarService } from "./grammar.service";
 import {
 	ApiResponseDto,
@@ -23,7 +23,6 @@ import {
 import { plainToInstance } from "class-transformer";
 
 @ApiTags("Grammar")
-@ApiBearerAuth()
 @Controller("grammar")
 export class GrammarController {
 	constructor(private readonly grammarService: GrammarService) {}

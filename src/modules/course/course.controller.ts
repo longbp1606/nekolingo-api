@@ -19,12 +19,10 @@ import {
 	ApiQuery,
 	ApiParam,
 	ApiBody,
-	ApiBearerAuth,
 } from "@nestjs/swagger";
 import { CourseModel } from "@db/models";
 
 @ApiTags("Course")
-@ApiBearerAuth()
 @Controller("course")
 export class CourseController {
 	constructor(private readonly svc: CourseService) {}
