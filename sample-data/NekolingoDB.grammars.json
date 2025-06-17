@@ -1,0 +1,105 @@
+[{
+  "_id": {
+    "$oid": "684fb1a5777ab12de2fc57b0"
+  },
+  "name": "Introduction Structure",
+  "description": "How to introduce yourself in Vietnamese: Tôi tên là [name]",
+  "condition": "Subject + tên là + Name",
+  "createdAt": {
+    "$date": "2025-06-16T05:54:45.228Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:54:45.228Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb1bc777ab12de2fc57b4"
+  },
+  "name": "Basic Sentence Structure",
+  "description": "Subject + Verb + Object structure in Vietnamese",
+  "condition": "S + V + O",
+  "createdAt": {
+    "$date": "2025-06-16T05:55:08.076Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:55:08.076Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb1c2777ab12de2fc57b8"
+  },
+  "name": "Question Formation",
+  "description": "How to form questions in Vietnamese using question words",
+  "condition": "Question word + subject + verb + object + không?",
+  "createdAt": {
+    "$date": "2025-06-16T05:55:14.652Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:55:14.652Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb1c7777ab12de2fc57bc"
+  },
+  "name": "Possession Structure",
+  "description": "How to express possession in Vietnamese",
+  "condition": "Subject + của + Possessor",
+  "createdAt": {
+    "$date": "2025-06-16T05:55:19.916Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:55:19.916Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb1cd777ab12de2fc57c0"
+  },
+  "name": "Present Simple",
+  "description": "How to form present simple tense in English",
+  "condition": "Subject + verb(s) + object",
+  "createdAt": {
+    "$date": "2025-06-16T05:55:25.381Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:55:25.381Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb1d2777ab12de2fc57c4"
+  },
+  "name": "Question Formation English",
+  "description": "How to form questions in English",
+  "condition": "Do/Does + subject + base verb + object?",
+  "createdAt": {
+    "$date": "2025-06-16T05:55:30.853Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:55:30.853Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb1d7777ab12de2fc57c8"
+  },
+  "name": "Past Tense",
+  "description": "How to form past tense in English",
+  "condition": "Subject + verb(-ed) + object",
+  "createdAt": {
+    "$date": "2025-06-16T05:55:35.439Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:55:35.439Z"
+  },
+  "__v": 0
+}]

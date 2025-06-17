@@ -1,0 +1,480 @@
+[{
+  "_id": {
+    "$oid": "684f9a930fd356386a378669"
+  },
+  "title": "Basic Greetings",
+  "order": 1,
+  "xp_reward": 10,
+  "topic": {
+    "$oid": "684f96eb0fd356386a378641"
+  },
+  "type": "vocabulary",
+  "description": "Learn how to say hello and goodbye in Vietnamese",
+  "createdAt": {
+    "$date": "2025-06-16T04:16:19.498Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:16:19.498Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9aa00fd356386a37866e"
+  },
+  "title": "Introducing Yourself",
+  "order": 2,
+  "xp_reward": 15,
+  "topic": {
+    "$oid": "684f96eb0fd356386a378641"
+  },
+  "type": "grammar",
+  "description": "Learn how to introduce yourself and ask someone's name",
+  "createdAt": {
+    "$date": "2025-06-16T04:16:32.490Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:16:32.490Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9aa70fd356386a378673"
+  },
+  "title": "Polite Expressions",
+  "order": 3,
+  "xp_reward": 12,
+  "topic": {
+    "$oid": "684f96eb0fd356386a378641"
+  },
+  "type": "listening",
+  "description": "Practice listening to polite expressions",
+  "createdAt": {
+    "$date": "2025-06-16T04:16:39.288Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:16:39.288Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9ab00fd356386a378678"
+  },
+  "title": "Conversation Practice",
+  "order": 4,
+  "xp_reward": 20,
+  "topic": {
+    "$oid": "684f96eb0fd356386a378641"
+  },
+  "type": "speaking",
+  "description": "Practice basic greeting conversations",
+  "createdAt": {
+    "$date": "2025-06-16T04:16:48.752Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:16:48.752Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9ab80fd356386a37867d"
+  },
+  "title": "Family Members",
+  "order": 1,
+  "xp_reward": 15,
+  "topic": {
+    "$oid": "684f97250fd356386a378645"
+  },
+  "type": "vocabulary",
+  "description": "Learn vocabulary for family members",
+  "createdAt": {
+    "$date": "2025-06-16T04:16:56.258Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:16:56.258Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9ac00fd356386a378682"
+  },
+  "title": "Describing Relationships",
+  "order": 2,
+  "xp_reward": 18,
+  "topic": {
+    "$oid": "684f97250fd356386a378645"
+  },
+  "type": "reading",
+  "description": "Read about different types of relationships",
+  "createdAt": {
+    "$date": "2025-06-16T04:17:04.153Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:17:04.153Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9ac80fd356386a378687"
+  },
+  "title": "Family Questions",
+  "order": 3,
+  "xp_reward": 16,
+  "topic": {
+    "$oid": "684f97250fd356386a378645"
+  },
+  "type": "grammar",
+  "description": "Learn how to ask questions about family",
+  "createdAt": {
+    "$date": "2025-06-16T04:17:12.409Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:17:12.409Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9afc0fd356386a37868c"
+  },
+  "title": "Basic Foods",
+  "order": 1,
+  "xp_reward": 12,
+  "topic": {
+    "$oid": "684f973b0fd356386a37864a"
+  },
+  "type": "vocabulary",
+  "description": "Learn vocabulary for common foods and drinks",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:04.358Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:04.358Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b040fd356386a378691"
+  },
+  "title": "Ordering Food",
+  "order": 2,
+  "xp_reward": 20,
+  "topic": {
+    "$oid": "684f973b0fd356386a37864a"
+  },
+  "type": "speaking",
+  "description": "Practice ordering food at a restaurant",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:12.731Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:12.731Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b0b0fd356386a378696"
+  },
+  "title": "Transportation Vocabulary",
+  "order": 1,
+  "xp_reward": 14,
+  "topic": {
+    "$oid": "684f97470fd356386a37864e"
+  },
+  "type": "vocabulary",
+  "description": "Learn words for different types of transportation",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:19.579Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:19.579Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b110fd356386a37869b"
+  },
+  "title": "Asking for Directions",
+  "order": 2,
+  "xp_reward": 18,
+  "topic": {
+    "$oid": "684f97470fd356386a37864e"
+  },
+  "type": "listening",
+  "description": "Listen to directions and navigation instructions",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:25.514Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:25.514Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b170fd356386a3786a0"
+  },
+  "title": "Shopping Vocabulary",
+  "order": 1,
+  "xp_reward": 13,
+  "topic": {
+    "$oid": "684f97550fd356386a378652"
+  },
+  "type": "vocabulary",
+  "description": "Learn vocabulary for shopping and money",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:31.080Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:31.080Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b1c0fd356386a3786a5"
+  },
+  "title": "Bargaining Practice",
+  "order": 2,
+  "xp_reward": 22,
+  "topic": {
+    "$oid": "684f97550fd356386a378652"
+  },
+  "type": "speaking",
+  "description": "Practice bargaining and negotiating prices",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:36.218Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:36.218Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b230fd356386a3786aa"
+  },
+  "title": "Common Phrases",
+  "order": 1,
+  "xp_reward": 10,
+  "topic": {
+    "$oid": "684f97f20fd356386a378657"
+  },
+  "type": "vocabulary",
+  "description": "Learn common English phrases for daily conversations",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:43.188Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:43.188Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b2d0fd356386a3786af"
+  },
+  "title": "Pronunciation Practice",
+  "order": 2,
+  "xp_reward": 15,
+  "topic": {
+    "$oid": "684f97f20fd356386a378657"
+  },
+  "type": "speaking",
+  "description": "Practice pronunciation of basic English words",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:53.398Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:53.398Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b330fd356386a3786b4"
+  },
+  "title": "Daily Conversations",
+  "order": 3,
+  "xp_reward": 18,
+  "topic": {
+    "$oid": "684f97f20fd356386a378657"
+  },
+  "type": "listening",
+  "description": "Listen to everyday English conversations",
+  "createdAt": {
+    "$date": "2025-06-16T04:18:59.005Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:18:59.005Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b3b0fd356386a3786b9"
+  },
+  "title": "Job Vocabulary",
+  "order": 1,
+  "xp_reward": 14,
+  "topic": {
+    "$oid": "684f98040fd356386a37865b"
+  },
+  "type": "vocabulary",
+  "description": "Learn vocabulary related to jobs and workplace",
+  "createdAt": {
+    "$date": "2025-06-16T04:19:07.932Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:19:07.932Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b420fd356386a3786be"
+  },
+  "title": "School Subjects",
+  "order": 2,
+  "xp_reward": 12,
+  "topic": {
+    "$oid": "684f98040fd356386a37865b"
+  },
+  "type": "reading",
+  "description": "Read about different school subjects and education",
+  "createdAt": {
+    "$date": "2025-06-16T04:19:14.964Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:19:14.964Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b480fd356386a3786c3"
+  },
+  "title": "Body Parts",
+  "order": 1,
+  "xp_reward": 11,
+  "topic": {
+    "$oid": "684f98200fd356386a37865f"
+  },
+  "type": "vocabulary",
+  "description": "Learn vocabulary for body parts and health",
+  "createdAt": {
+    "$date": "2025-06-16T04:19:20.737Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:19:20.737Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b4d0fd356386a3786c8"
+  },
+  "title": "At the Doctor",
+  "order": 2,
+  "xp_reward": 20,
+  "topic": {
+    "$oid": "684f98200fd356386a37865f"
+  },
+  "type": "speaking",
+  "description": "Practice conversations at the doctor's office",
+  "createdAt": {
+    "$date": "2025-06-16T04:19:25.725Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:19:25.725Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b520fd356386a3786cd"
+  },
+  "title": "Weather Words",
+  "order": 1,
+  "xp_reward": 13,
+  "topic": {
+    "$oid": "684f982b0fd356386a378663"
+  },
+  "type": "vocabulary",
+  "description": "Learn vocabulary for weather and time expressions",
+  "createdAt": {
+    "$date": "2025-06-16T04:19:30.110Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:19:30.110Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b5a0fd356386a3786d2"
+  },
+  "title": "Time and Dates",
+  "order": 2,
+  "xp_reward": 16,
+  "topic": {
+    "$oid": "684f982b0fd356386a378663"
+  },
+  "type": "grammar",
+  "description": "Learn how to express time and dates in English",
+  "createdAt": {
+    "$date": "2025-06-16T04:19:38.036Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:19:38.036Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9b980fd356386a3786e0"
+  },
+  "title": "Entertainment Discussion",
+  "order": 4,
+  "xp_reward": 19,
+  "topic": {
+    "$oid": "684f982b0fd356386a378663"
+  },
+  "type": "reading",
+  "description": "Read and discuss different forms of entertainment",
+  "createdAt": {
+    "$date": "2025-06-16T04:20:40.329Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:20:40.329Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9ba70fd356386a3786e5"
+  },
+  "title": "Sports and Activities",
+  "order": 3,
+  "xp_reward": 15,
+  "topic": {
+    "$oid": "684f982b0fd356386a378663"
+  },
+  "type": "vocabulary",
+  "description": "Learn vocabulary for sports and recreational activities",
+  "createdAt": {
+    "$date": "2025-06-16T04:20:55.514Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:20:55.514Z"
+  },
+  "__v": 0
+}]
