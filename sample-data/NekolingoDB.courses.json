@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "684f926a0fd356386a378630"
+  },
+  "title": "Vietnamese for English Speakers - Beginner",
+  "description": "Learn basic Vietnamese for everyday conversations and interactions. Perfect for beginners who want to start their Vietnamese journey.",
+  "language_from": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "language_to": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T03:41:30.423Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T03:41:30.423Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f939b0fd356386a37863a"
+  },
+  "title": "English for Vietnamese Speakers - Beginner",
+  "description": "Learn basic English for Vietnamese speakers. Start your English learning journey with essential vocabulary and grammar.",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T03:46:35.008Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T03:46:35.008Z"
+  },
+  "__v": 0
+}]

@@ -1,0 +1,441 @@
+[{
+  "_id": {
+    "$oid": "684f9e150fd356386a3786ed"
+  },
+  "word": "xin chào",
+  "meaning": "hello",
+  "type": "greeting",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:31:17.797Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:31:17.797Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9e220fd356386a3786f3"
+  },
+  "word": "tạm biệt",
+  "meaning": "goodbye",
+  "type": "greeting",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:31:30.082Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:31:30.082Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9e290fd356386a3786f9"
+  },
+  "word": "cảm ơn",
+  "meaning": "thank you",
+  "type": "polite",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:31:37.614Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:31:37.614Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9e2f0fd356386a3786ff"
+  },
+  "word": "xin lỗi",
+  "meaning": "sorry",
+  "type": "polite",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:31:43.595Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:31:43.595Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9e360fd356386a378705"
+  },
+  "word": "gia đình",
+  "meaning": "family",
+  "type": "family",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:31:50.546Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:31:50.546Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9e3d0fd356386a37870b"
+  },
+  "word": "bố",
+  "meaning": "father",
+  "type": "family",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:31:57.456Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:31:57.456Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f9e430fd356386a378711"
+  },
+  "word": "mẹ",
+  "meaning": "mother",
+  "type": "family",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:32:03.857Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:32:03.857Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb108777ab12de2fc575f"
+  },
+  "word": "anh",
+  "meaning": "older brother",
+  "type": "family",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:08.913Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:08.913Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb110777ab12de2fc5765"
+  },
+  "word": "chị",
+  "meaning": "older sister",
+  "type": "family",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:16.250Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:16.250Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb115777ab12de2fc576b"
+  },
+  "word": "em",
+  "meaning": "younger sibling",
+  "type": "family",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:21.458Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:21.458Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb119777ab12de2fc5771"
+  },
+  "word": "cơm",
+  "meaning": "rice",
+  "type": "food",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:25.964Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:25.964Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb11e777ab12de2fc5777"
+  },
+  "word": "nước",
+  "meaning": "water",
+  "type": "food",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:30.355Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:30.355Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb123777ab12de2fc577d"
+  },
+  "word": "xe buýt",
+  "meaning": "bus",
+  "type": "transport",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:35.971Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:35.971Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb128777ab12de2fc5783"
+  },
+  "word": "xe máy",
+  "meaning": "motorbike",
+  "type": "transport",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:40.436Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:40.436Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb12c777ab12de2fc5789"
+  },
+  "word": "tiền",
+  "meaning": "money",
+  "type": "money",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:44.700Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:44.700Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb130777ab12de2fc578f"
+  },
+  "word": "mua",
+  "meaning": "buy",
+  "type": "action",
+  "language_from": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "language_to": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:48.631Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:48.631Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb135777ab12de2fc5795"
+  },
+  "word": "How are you?",
+  "meaning": "Bạn có khỏe không?",
+  "type": "conversation",
+  "language_from": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "language_to": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:52:53.070Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:52:53.070Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb13f777ab12de2fc579b"
+  },
+  "word": "Nice to meet you",
+  "meaning": "Rất vui được gặp bạn",
+  "type": "conversation",
+  "language_from": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "language_to": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:53:03.652Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:53:03.652Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb147777ab12de2fc57a1"
+  },
+  "word": "What's your name?",
+  "meaning": "Tên bạn là gì?",
+  "type": "conversation",
+  "language_from": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "language_to": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:53:11.448Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:53:11.448Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb14e777ab12de2fc57a7"
+  },
+  "word": "teacher",
+  "meaning": "giáo viên",
+  "type": "work",
+  "language_from": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "language_to": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:53:18.017Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:53:18.017Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb151777ab12de2fc57ad"
+  },
+  "word": "student",
+  "meaning": "học sinh",
+  "type": "work",
+  "language_from": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "language_to": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T05:53:21.741Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T05:53:21.741Z"
+  },
+  "__v": 0
+}]

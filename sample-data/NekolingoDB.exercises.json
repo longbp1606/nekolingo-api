@@ -1,0 +1,437 @@
+[{
+  "_id": {
+    "$oid": "684fb816777ab12de2fc57e8"
+  },
+  "type": "reading",
+  "question_format": "reorder",
+  "question": "Read and choose the correct response: Bạn khỏe không?",
+  "correct_answer": "Tôi khỏe, cảm ơn",
+  "options": null,
+  "audio_url": null,
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9b420fd356386a3786be"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "hard",
+    "tags": [
+      "reading",
+      "reorder"
+    ],
+    "hints": [
+      "This is a reorder format question in reading."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T06:22:14.342Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T06:22:14.342Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb829777ab12de2fc57ee"
+  },
+  "type": "speaking",
+  "question_format": "fill_in_blank",
+  "question": "Listen and choose what you hear",
+  "correct_answer": "xin chào",
+  "options": null,
+  "audio_url": null,
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9b1c0fd356386a3786a5"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "hard",
+    "tags": [
+      "speaking",
+      "fill_in_blank"
+    ],
+    "hints": [
+      "This is a fill_in_blank format question in speaking."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T06:22:33.205Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T06:22:33.205Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fb831777ab12de2fc57f4"
+  },
+  "type": "vocabulary",
+  "question_format": "true_false",
+  "question": "How do you say 'hello' in Vietnamese?",
+  "correct_answer": "xin chào",
+  "options": [
+    "xin chào",
+    "tạm biệt",
+    "cảm ơn",
+    "xin lỗi"
+  ],
+  "audio_url": null,
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9b480fd356386a3786c3"
+  },
+  "vocabulary": {
+    "$oid": "684f9e150fd356386a3786ed"
+  },
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "hard",
+    "tags": [
+      "vocabulary",
+      "true_false"
+    ],
+    "hints": [
+      "This is a true_false format question in vocabulary."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T06:22:41.336Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T06:22:41.336Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc6fa2fe7500f625cf9b7"
+  },
+  "type": "listening",
+  "question_format": "match",
+  "question": "Is 'cảm ơn' used to say thank you?",
+  "correct_answer": true,
+  "options": null,
+  "audio_url": "https://audio.example.com/aa5531fc-8caf-452f-96e1-c596476a7e09.mp3",
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9b330fd356386a3786b4"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "easy",
+    "tags": [
+      "listening",
+      "match"
+    ],
+    "hints": [
+      "This is a match format question in listening."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:25:46.481Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:25:46.481Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc75a2fe7500f625cf9c1"
+  },
+  "type": "listening",
+  "question_format": "true_false",
+  "question": "Choose the correct sentence structure for possession",
+  "correct_answer": "Subject + của + Object",
+  "options": [
+    "Subject + là + Object",
+    "Subject + của + Object",
+    "Subject + verb + Object"
+  ],
+  "audio_url": "https://audio.example.com/0f25fb98-3695-470b-9ea0-fde30a52d721.mp3",
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9b330fd356386a3786b4"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "medium",
+    "tags": [
+      "listening",
+      "true_false"
+    ],
+    "hints": [
+      "This is a true_false format question in listening."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:27:22.460Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:27:22.460Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc76d2fe7500f625cf9c6"
+  },
+  "type": "reading",
+  "question_format": "true_false",
+  "question": "Choose the correct sentence structure for possession",
+  "correct_answer": "Subject + của + Object",
+  "options": [
+    "Subject + là + Object",
+    "Subject + của + Object",
+    "Subject + verb + Object"
+  ],
+  "audio_url": null,
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9ac00fd356386a378682"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "medium",
+    "tags": [
+      "reading",
+      "true_false"
+    ],
+    "hints": [
+      "This is a true_false format question in reading."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:27:41.450Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:27:41.450Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc7752fe7500f625cf9cb"
+  },
+  "type": "listening",
+  "question_format": "match",
+  "question": "Read and choose the correct response: Bạn khỏe không?",
+  "correct_answer": "Tôi khỏe, cảm ơn",
+  "options": null,
+  "audio_url": "https://audio.example.com/7d5e8790-465e-4d9e-aee9-6d4458b029f5.mp3",
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9aa70fd356386a378673"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "medium",
+    "tags": [
+      "listening",
+      "match"
+    ],
+    "hints": [
+      "This is a match format question in listening."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:27:49.256Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:27:49.256Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc7972fe7500f625cf9d6"
+  },
+  "type": "listening",
+  "question_format": "true_false",
+  "question": "Reorder the sentence: là / tên / tôi / An",
+  "correct_answer": [
+    "tôi",
+    "tên",
+    "là",
+    "An"
+  ],
+  "options": null,
+  "audio_url": "https://audio.example.com/d679bb61-3454-4c93-8c28-b9fd7be2aba3.mp3",
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9b330fd356386a3786b4"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "easy",
+    "tags": [
+      "listening",
+      "true_false"
+    ],
+    "hints": [
+      "This is a true_false format question in listening."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:28:23.102Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:28:23.102Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc7ee2fe7500f625cf9e1"
+  },
+  "type": "listening",
+  "question_format": "fill_in_blank",
+  "question": "Fill in the blank: Tôi ___ là Nam.",
+  "correct_answer": "tên",
+  "options": null,
+  "audio_url": "https://audio.example.com/7b7931ee-367b-42ff-acc5-ceaca81e02ce.mp3",
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9b110fd356386a37869b"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "hard",
+    "tags": [
+      "listening",
+      "fill_in_blank"
+    ],
+    "hints": [
+      "This is a fill_in_blank format question in listening."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:29:50.282Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:29:50.282Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc8162fe7500f625cf9ea"
+  },
+  "type": "reading",
+  "question_format": "multiple_choice",
+  "question": "Listen and choose what you hear",
+  "correct_answer": "xin chào",
+  "options": [
+    "xin chào",
+    "cảm ơn",
+    "tạm biệt"
+  ],
+  "audio_url": null,
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9ac00fd356386a378682"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "easy",
+    "tags": [
+      "reading",
+      "multiple_choice"
+    ],
+    "hints": [
+      "This is a multiple_choice format question in reading."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:30:30.233Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:30:30.233Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc8202fe7500f625cf9ef"
+  },
+  "type": "listening",
+  "question_format": "image_select",
+  "question": "Reorder the sentence: là / tên / tôi / An",
+  "correct_answer": [
+    "tôi",
+    "tên",
+    "là",
+    "An"
+  ],
+  "options": null,
+  "audio_url": "https://audio.example.com/fa466dba-1900-4ca8-b3a9-e9f9bfb02902.mp3",
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9aa70fd356386a378673"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "easy",
+    "tags": [
+      "listening",
+      "image_select"
+    ],
+    "hints": [
+      "This is a image_select format question in listening."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:30:40.189Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:30:40.189Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684fc83d2fe7500f625cf9f7"
+  },
+  "type": "reading",
+  "question_format": "match",
+  "question": "Choose the correct sentence structure for possession",
+  "correct_answer": "Subject + của + Object",
+  "options": null,
+  "audio_url": null,
+  "image_url": null,
+  "lesson": {
+    "$oid": "684f9b980fd356386a3786e0"
+  },
+  "vocabulary": null,
+  "grammar": null,
+  "extra_data": {
+    "difficulty": "medium",
+    "tags": [
+      "reading",
+      "match"
+    ],
+    "hints": [
+      "This is a match format question in reading."
+    ]
+  },
+  "createdAt": {
+    "$date": "2025-06-16T07:31:09.751Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T07:31:09.751Z"
+  },
+  "__v": 0
+}]

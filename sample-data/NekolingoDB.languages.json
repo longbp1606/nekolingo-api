@@ -1,0 +1,45 @@
+[{
+  "_id": {
+    "$oid": "684f91810fd356386a37861f"
+  },
+  "name": "Tiếng Anh",
+  "code": "en",
+  "flag_url": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg",
+  "createdAt": {
+    "$date": "2025-06-16T03:37:37.167Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T03:37:37.167Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f91bf0fd356386a378623"
+  },
+  "name": "Vietnamese",
+  "code": "vi",
+  "flag_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/1200px-Flag_of_Vietnam.svg.png",
+  "createdAt": {
+    "$date": "2025-06-16T03:38:39.779Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T03:38:39.779Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f91e90fd356386a378627"
+  },
+  "name": "Japanese",
+  "code": "jp",
+  "flag_url": "https://gojapan.vn/wp-content/uploads/2021/07/co-nhat-4795-1497173124.png",
+  "createdAt": {
+    "$date": "2025-06-16T03:39:21.189Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T03:39:21.189Z"
+  },
+  "__v": 0
+}]

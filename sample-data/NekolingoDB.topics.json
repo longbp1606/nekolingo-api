@@ -1,0 +1,153 @@
+[{
+  "_id": {
+    "$oid": "684f96eb0fd356386a378641"
+  },
+  "title": "Greetings and Introductions",
+  "order": 1,
+  "course": {
+    "$oid": "684f926a0fd356386a378630"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:00:43.441Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:00:43.441Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f97250fd356386a378645"
+  },
+  "title": "Family and Relationships",
+  "order": 2,
+  "course": {
+    "$oid": "684f926a0fd356386a378630"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:01:41.550Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:01:41.550Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f973b0fd356386a37864a"
+  },
+  "title": "Food and Dining",
+  "order": 3,
+  "course": {
+    "$oid": "684f926a0fd356386a378630"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:02:03.908Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:02:03.908Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f97470fd356386a37864e"
+  },
+  "title": "Transportation and Directions",
+  "order": 4,
+  "course": {
+    "$oid": "684f926a0fd356386a378630"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:02:15.046Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:02:15.046Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f97550fd356386a378652"
+  },
+  "title": "Shopping and Money",
+  "order": 5,
+  "course": {
+    "$oid": "684f926a0fd356386a378630"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:02:29.263Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:02:29.263Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f97f20fd356386a378657"
+  },
+  "title": "Basic Conversations",
+  "order": 1,
+  "course": {
+    "$oid": "684f939b0fd356386a37863a"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:05:06.551Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:05:06.551Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f98040fd356386a37865b"
+  },
+  "title": "Work and School",
+  "order": 2,
+  "course": {
+    "$oid": "684f939b0fd356386a37863a"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:05:24.394Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:05:24.394Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f98200fd356386a37865f"
+  },
+  "title": "Weather and Time",
+  "order": 4,
+  "course": {
+    "$oid": "684f939b0fd356386a37863a"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:05:52.787Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:05:52.787Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "684f982b0fd356386a378663"
+  },
+  "title": "Hobbies and Entertainment",
+  "order": 5,
+  "course": {
+    "$oid": "684f939b0fd356386a37863a"
+  },
+  "createdAt": {
+    "$date": "2025-06-16T04:06:03.709Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-16T04:06:03.709Z"
+  },
+  "__v": 0
+}]
