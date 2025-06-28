@@ -14,6 +14,7 @@ export interface IUser {
 	language_from: string;
 	language_to: string;
 	is_premiere: boolean;
+	balance: number;
 }
 
 export type UserDocumentType = HydratedDocument<IUser>;
@@ -34,6 +35,7 @@ const UserSchema = new Schema<IUser, UserModelType>(
 		language_from: { type: String, required: false },
 		language_to: { type: String, required: false },
 		is_premiere: { type: Boolean, required: false, default: false },
+		balance: { type: Number, required: false, default: 0 },
 	},
 	{ timestamps: true },
 );

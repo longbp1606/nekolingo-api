@@ -13,6 +13,8 @@ import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
 import { AuthGuard, AuthModule } from "@modules/auth";
+import { WalletModule } from "./modules/wallet/wallet.module";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
 	imports: [
@@ -28,6 +30,8 @@ import { AuthGuard, AuthModule } from "@modules/auth";
 		ExerciseModule,
 		ArchivementModule,
 		UserArchivementModule,
+		WalletModule,
+		ConfigModule.forRoot({ isGlobal: true }),
 	],
 	controllers: [],
 	providers: [
