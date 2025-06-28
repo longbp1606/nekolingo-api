@@ -13,6 +13,12 @@ import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
 import { AuthGuard, AuthModule } from "@modules/auth";
+import { WalletModule } from "./modules/wallet/wallet.module";
+import { ConfigModule } from "@nestjs/config";
+import { ScheduleModule } from "@nestjs/schedule";
+import { QuestModule } from "@modules/quest/quest.module";
+import { LeaderboardModule } from "@modules/leaderboard/leaderboard.module";
+import { TaskScheduler } from "./scheduler/task.scheduler";
 
 @Module({
 	imports: [
@@ -28,6 +34,11 @@ import { AuthGuard, AuthModule } from "@modules/auth";
 		ExerciseModule,
 		ArchivementModule,
 		UserArchivementModule,
+		WalletModule,
+		ConfigModule.forRoot({ isGlobal: true }),
+		ScheduleModule.forRoot(),
+		QuestModule,
+		LeaderboardModule,
 	],
 	controllers: [],
 	providers: [
@@ -43,6 +54,7 @@ import { AuthGuard, AuthModule } from "@modules/auth";
 			provide: "APP_GUARD",
 			useClass: AuthGuard,
 		},
+		TaskScheduler,
 	],
 })
 export class AppModule {}
