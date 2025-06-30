@@ -19,9 +19,16 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { QuestModule } from "@modules/quest/quest.module";
 import { LeaderboardModule } from "@modules/leaderboard/leaderboard.module";
 import { TaskScheduler } from "./scheduler/task.scheduler";
+import { ClsModule } from "nestjs-cls";
 
 @Module({
 	imports: [
+		ClsModule.forRoot({
+			global: true,
+			middleware: {
+				mount: true,
+			},
+		}),
 		AuthModule,
 		UserModule,
 		TopicModule,

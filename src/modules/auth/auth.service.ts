@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 import * as jwt from "jsonwebtoken";
-import { Env } from "@utils";
+import { Env, NekolingoClsStore } from "@utils";
 import { ClsService } from "nestjs-cls";
 import { BasicLoginRequest, BasicRegisterRequest } from "./dto";
 import { UserModel } from "@db/models";
@@ -11,7 +11,13 @@ import { ExistedEmailError } from "./errors/existed-email.error";
 
 @Injectable()
 export class AuthService {
-	async issueTokenPair(userId: Types.ObjectId) {
+	constructor(private readonly cls: ClsService<NekolingoClsStore>) {}
+
+	getProfileCls() {
+		return this.cls.get("user");
+	}
+
+	async issueTokenPair(userId: Types.ObjectId, role: number) {
 		const accessToken = jwt.sign({}, Env.JWT_AT_SECRET, {
 			subject: userId.toString(),
 			expiresIn: Env.JWT_AT_EXPIRATION_TIME,
@@ -25,6 +31,7 @@ export class AuthService {
 		return {
 			accessToken,
 			refreshToken,
+			role,
 		};
 	}
 
@@ -38,7 +45,7 @@ export class AuthService {
 		if (!user) throw new EmailNotFoundError();
 		if (!bcrypt.compareSync(dto.password, user.password))
 			throw new WrongPasswordError();
-		return this.issueTokenPair(user._id);
+		return this.issueTokenPair(user._id, user.role);
 	}
 
 	async basicRegister(dto: BasicRegisterRequest) {
