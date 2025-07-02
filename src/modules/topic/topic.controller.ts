@@ -4,6 +4,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	Patch,
 	Post,
 	Put,
 	Query,
@@ -64,7 +65,7 @@ export class TopicController {
 		return new ApiResponseDto(topic);
 	}
 
-	@Put(":id")
+	@Patch(":id")
 	@SwaggerApiResponse(TopicResponse)
 	async updateTopic(@Param("id") id: string, @Body() dto: UpdateTopicRequest) {
 		const topic = await this.topicService.updateTopic(id, dto);

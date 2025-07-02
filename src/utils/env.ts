@@ -14,11 +14,9 @@ export const Env = {
 	ENABLE_SWAGGER: (process.env.ENABLE_SWAGGER || "false") == "true",
 
 	JWT_AT_SECRET: process.env.JWT_AT_SECRET || "",
-	JWT_AT_EXPIRATION_TIME: parseInt(process.env.JWT_AT_EXPIRATION_TIME || "300"),
+	JWT_AT_EXPIRATION_TIME: parseInt(process.env.JWT_AT_EXPIRES_IN || "300"),
 	JWT_RT_SECRET: process.env.JWT_RT_SECRET || "",
-	JWT_RT_EXPIRATION_TIME: parseInt(
-		process.env.JWT_RT_EXPIRATION_TIME || "86400",
-	),
+	JWT_RT_EXPIRATION_TIME: parseInt(process.env.JWT_RT_EXPIRES_IN || "86400"),
 } as const;
 
 console.log(Env);

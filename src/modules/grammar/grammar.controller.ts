@@ -4,6 +4,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	Patch,
 	Post,
 	Put,
 	Query,
@@ -57,7 +58,7 @@ export class GrammarController {
 		return new ApiResponseDto(plainToInstance(GrammarResponse, grammar));
 	}
 
-	@Put(":id")
+	@Patch(":id")
 	@SwaggerApiResponse(GrammarResponse)
 	async updateGrammar(
 		@Param("id") id: string,

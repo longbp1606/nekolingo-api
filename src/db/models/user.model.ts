@@ -22,6 +22,7 @@ export interface IUser {
 	is_premiere: boolean;
 	createdAt?: Date;
 	updatedAt?: Date;
+	balance: number;
 }
 
 export type UserDocumentType = HydratedDocument<IUser>;

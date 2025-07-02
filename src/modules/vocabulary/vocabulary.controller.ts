@@ -4,6 +4,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	Patch,
 	Post,
 	Put,
 	Query,
@@ -59,7 +60,7 @@ export class VocabularyController {
 		return new ApiResponseDto(vocabulary);
 	}
 
-	@Put(":id")
+	@Patch(":id")
 	@SwaggerApiResponse(VocabularyResponse)
 	async updateVocabulary(
 		@Param("id") id: string,
