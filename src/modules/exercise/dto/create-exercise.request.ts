@@ -1,19 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
-	IsArray,
-	IsEnum,
-	IsMongoId,
-	IsObject,
-	IsOptional,
 	IsString,
-	ValidateIf,
+	IsEnum,
+	IsOptional,
+	IsMongoId,
+	IsArray,
+	IsObject,
+	ValidateNested,
 } from "class-validator";
 
 export class CreateExerciseRequest {
 	@ApiProperty({
-		enum: ["vocabulary", "grammar", "listening", "reading", "speaking"],
+		description: "Loại nội dung của bài tập",
+		example: "vocabulary",
 	})
-	@IsEnum(["vocabulary", "grammar", "listening", "reading", "speaking"])
+	@IsString()
 	type: string;
 
 	@ApiProperty({
@@ -40,21 +41,12 @@ export class CreateExerciseRequest {
 	@IsString()
 	question: string;
 
-	@ApiProperty({
-		description:
-			"Đáp án đúng. Có thể là string, mảng string, number hoặc object",
-	})
-	@IsOptional()
-	@ValidateIf((o) => typeof o.correct_answer === "string")
-	@IsString()
-	@ValidateIf((o) => Array.isArray(o.correct_answer))
-	@IsArray()
+	@ApiProperty()
 	correct_answer: any;
 
 	@ApiPropertyOptional({ type: [String] })
 	@IsOptional()
 	@IsArray()
-	@IsString({ each: true })
 	options?: string[];
 
 	@ApiPropertyOptional()
@@ -81,10 +73,7 @@ export class CreateExerciseRequest {
 	@IsMongoId()
 	grammar?: string;
 
-	@ApiPropertyOptional({
-		description: "Dữ liệu bổ sung cho bài tập (nếu có)",
-		type: Object,
-	})
+	@ApiPropertyOptional()
 	@IsOptional()
 	@IsObject()
 	extra_data?: Record<string, any>;

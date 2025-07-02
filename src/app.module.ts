@@ -13,6 +13,7 @@ import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
 import { AuthGuard, AuthModule } from "@modules/auth";
+import { UserProgressModule } from "@modules/user-progress";
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { AuthGuard, AuthModule } from "@modules/auth";
 		ExerciseModule,
 		ArchivementModule,
 		UserArchivementModule,
+		UserProgressModule,
 	],
 	controllers: [],
 	providers: [

@@ -7,13 +7,21 @@ export interface IUser {
 	role: UserRoleEnum;
 	username: string;
 	avatar_url: string;
+
 	current_level: number;
 	xp: number;
 	weekly_xp: number;
+	hearts: number;
+
 	streak_days: number;
+	is_freeze: boolean;
+	last_active_date?: Date;
+	freeze_count: number;
 	language_from: string;
 	language_to: string;
 	is_premiere: boolean;
+	createdAt?: Date;
+	updatedAt?: Date;
 }
 
 export type UserDocumentType = HydratedDocument<IUser>;
@@ -25,15 +33,23 @@ const UserSchema = new Schema<IUser, UserModelType>(
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
 		role: { type: Number, enum: UserRoleEnum, default: UserRoleEnum.USER },
-		username: { type: String, required: false },
-		avatar_url: { type: String, required: false },
-		current_level: { type: Number, required: false, default: 1 },
-		xp: { type: Number, required: false, default: 0 },
-		weekly_xp: { type: Number, required: false, default: 0 },
-		streak_days: { type: Number, required: false, default: 0 },
-		language_from: { type: String, required: false },
-		language_to: { type: String, required: false },
-		is_premiere: { type: Boolean, required: false, default: false },
+
+		username: { type: String },
+		avatar_url: { type: String },
+
+		current_level: { type: Number, default: 1 },
+		xp: { type: Number, default: 0 },
+		weekly_xp: { type: Number, default: 0 },
+		hearts: { type: Number, default: 5 },
+
+		streak_days: { type: Number, default: 0 },
+		is_freeze: { type: Boolean, default: false },
+		last_active_date: { type: Date },
+		freeze_count: { type: Number, required: false, default: 0 },
+
+		language_from: { type: String },
+		language_to: { type: String },
+		is_premiere: { type: Boolean, default: false },
 	},
 	{ timestamps: true },
 );

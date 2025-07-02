@@ -134,4 +134,10 @@ export class TopicService {
 			.sort({ order: 1 })
 			.exec();
 	}
+	async listAllTopics() {
+		return await TopicModel.find({})
+			.sort({ order: 1 })
+			.populate("course", "title")
+			.exec();
+	}
 }

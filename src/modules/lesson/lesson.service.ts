@@ -27,6 +27,12 @@ export class LessonService {
 		if (errors.length) {
 			throw new ApiValidationError(errors);
 		}
+		if (dto.mode && !["normal", "personalized", "mixed"].includes(dto.mode)) {
+			errors.push({
+				property: "mode",
+				constraints: { enum: "Invalid lesson mode" },
+			} as ValidationError);
+		}
 	}
 
 	private async validateBeforeCreate(dto: CreateLessonRequest): Promise<void> {
