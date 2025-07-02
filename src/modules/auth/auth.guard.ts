@@ -30,6 +30,12 @@ export class AuthGuard implements CanActivate {
 		const user = await UserModel.findById(userId);
 		this.cls.set("user", UserResponse.fromDocument(user));
 
+		req.user = {
+			id: user.id,
+			email: user.email,
+			role: user.role,
+		};
+
 		return true;
 	}
 
