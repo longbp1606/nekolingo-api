@@ -1,7 +1,7 @@
 import mongoose, { HydratedDocument, Model, Schema, Types } from "mongoose";
 
 export interface IExercise {
-	type: "vocabulary" | "grammar" | "listening" | "reading" | "speaking";
+	type: string;
 	question_format:
 		| "fill_in_blank"
 		| "match"
@@ -12,6 +12,7 @@ export interface IExercise {
 
 	question: string;
 	correct_answer: string | string[] | number | object;
+
 	options?: string[];
 	audio_url?: string;
 	image_url?: string;
@@ -24,41 +25,53 @@ export interface IExercise {
 }
 
 export type ExerciseDocument = HydratedDocument<IExercise>;
-
 export type ExerciseModelType = Model<IExercise, {}, {}, {}, ExerciseDocument>;
+
+const ALLOWED_TYPES = [
+	"vocabulary",
+	"grammar",
+	"listening",
+	"reading",
+	"speaking",
+];
+
+const ALLOWED_FORMATS = [
+	"fill_in_blank",
+	"match",
+	"reorder",
+	"image_select",
+	"multiple_choice",
+	"true_false",
+];
 
 const ExerciseSchema = new Schema<IExercise, ExerciseModelType>(
 	{
 		type: {
 			type: String,
 			required: true,
-			enum: ["vocabulary", "grammar", "listening", "reading", "speaking"],
+			validate: {
+				validator: (value: string) => ALLOWED_TYPES.includes(value),
+				message: (props) => `Invalid exercise type: ${props.value}`,
+			},
 		},
 		question_format: {
 			type: String,
 			required: true,
-			enum: [
-				"fill_in_blank",
-				"match",
-				"reorder",
-				"image_select",
-				"multiple_choice",
-				"true_false",
-			],
+			enum: ALLOWED_FORMATS,
 		},
 		question: { type: String, required: true },
 		correct_answer: { type: Schema.Types.Mixed, required: true },
-		options: { type: [String], required: false },
-		audio_url: { type: String, required: false },
-		image_url: { type: String, required: false },
-		lesson: { type: Schema.Types.ObjectId, ref: "Lesson", required: true },
-		vocabulary: {
+		options: { type: [String] },
+		audio_url: { type: String },
+		image_url: { type: String },
+		lesson: {
 			type: Schema.Types.ObjectId,
-			ref: "Vocabulary",
-			required: false,
+			ref: "Lesson",
+			required: true,
 		},
-		grammar: { type: Schema.Types.ObjectId, ref: "Grammar", required: false },
-		extra_data: { type: Schema.Types.Mixed, required: false },
+		vocabulary: { type: Schema.Types.ObjectId, ref: "Vocabulary" },
+		grammar: { type: Schema.Types.ObjectId, ref: "Grammar" },
+		extra_data: { type: Schema.Types.Mixed },
 	},
 	{ timestamps: true },
 );

@@ -18,7 +18,8 @@ export class ExerciseService {
 	) {
 		const errors: ValidationError[] = [];
 
-		if (dto.lesson && !(await LessonModel.exists({ _id: dto.lesson }))) {
+		const lesson = dto.lesson ? await LessonModel.findById(dto.lesson) : null;
+		if (dto.lesson && !lesson) {
 			errors.push({
 				property: "lesson",
 				constraints: { exists: "Lesson ID does not exist" },
@@ -40,6 +41,17 @@ export class ExerciseService {
 				property: "grammar",
 				constraints: { exists: "Grammar ID does not exist" },
 			} as ValidationError);
+		}
+
+		if (dto.lesson && dto.type && lesson) {
+			if (!lesson.type.includes(dto.type)) {
+				errors.push({
+					property: "type",
+					constraints: {
+						invalid: `Exercise type "${dto.type}" is not allowed in Lesson "${lesson.title}"`,
+					},
+				} as ValidationError);
+			}
 		}
 
 		if (errors.length > 0) {

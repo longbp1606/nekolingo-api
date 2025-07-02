@@ -30,7 +30,12 @@ export class TopicController {
 		const topic = await this.topicService.createTopic(dto);
 		return new ApiResponseDto(topic, null, "Topic created successfully");
 	}
-
+	@Get("listTopics")
+	@SwaggerApiResponse(TopicResponse, { isArray: true })
+	async listAllTopics() {
+		const topics = await this.topicService.listAllTopics();
+		return new ApiResponseDto(topics);
+	}
 	@Get()
 	@SwaggerApiResponse(TopicResponse, { isArray: true, withPagination: true })
 	async getTopics(

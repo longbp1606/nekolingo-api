@@ -1,56 +1,51 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-	IsEnum,
+	IsArray,
 	IsMongoId,
 	IsNotEmpty,
 	IsNumber,
 	IsOptional,
 	IsString,
+	IsEnum,
+	ArrayNotEmpty,
+	ArrayMinSize,
 } from "class-validator";
 
 export class CreateLessonRequest {
-	@ApiProperty({
-		example: "Bài học 1: Giới thiệu",
-		description: "Tiêu đề bài học",
-	})
+	@ApiProperty({ example: "Lesson 1: Introduction" })
 	@IsString()
 	@IsNotEmpty()
 	title: string;
 
-	@ApiProperty({
-		example: 1,
-		description: "Thứ tự của bài học trong cùng một topic",
-	})
+	@ApiProperty({ example: 1 })
 	@IsNumber()
 	order: number;
 
-	@ApiProperty({
-		example: 50,
-		description: "XP thưởng khi hoàn thành",
-	})
+	@ApiProperty({ example: 50 })
 	@IsNumber()
 	xp_reward: number;
 
-	@ApiProperty({
-		example: "665f2d439b61bdf74e06b7d5",
-		description: "ID của Topic",
-	})
+	@ApiProperty({ example: "665f2d439b61bdf74e06b7d5" })
 	@IsMongoId()
 	topic: string;
 
 	@ApiProperty({
-		example: "vocabulary",
-		enum: ["vocabulary", "grammar", "listening", "reading", "speaking"],
-		description: "Loại bài học",
+		example: ["vocabulary", "reading"],
+		description: "Các dạng kỹ năng trong bài học",
 	})
-	@IsEnum(["vocabulary", "grammar", "listening", "reading", "speaking"])
-	type: "vocabulary" | "grammar" | "listening" | "reading" | "speaking";
+	@IsArray()
+	@ArrayNotEmpty()
+	@IsString({ each: true })
+	type: string[];
 
 	@ApiProperty({
-		example: "Bài học giới thiệu các từ vựng cơ bản.",
-		description: "Mô tả ngắn gọn về bài học",
-		required: false,
+		example: "normal",
+		enum: ["normal", "personalized", "mixed"],
 	})
+	@IsEnum(["normal", "personalized", "mixed"])
+	mode: "normal" | "personalized" | "mixed";
+
+	@ApiProperty({ example: "Giới thiệu các từ vựng cơ bản", required: false })
 	@IsOptional()
 	@IsString()
 	description?: string;

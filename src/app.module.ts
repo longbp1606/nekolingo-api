@@ -13,6 +13,7 @@ import { Module } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { MyExceptionFilter, ValidationPipe } from "@utils";
 import { AuthGuard, AuthModule } from "@modules/auth";
+import { UserProgressModule } from "@modules/user-progress";
 import { WalletModule } from "./modules/wallet/wallet.module";
 import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
@@ -41,6 +42,7 @@ import { ClsModule } from "nestjs-cls";
 		ExerciseModule,
 		ArchivementModule,
 		UserArchivementModule,
+		UserProgressModule,
 		WalletModule,
 		ConfigModule.forRoot({ isGlobal: true }),
 		ScheduleModule.forRoot(),
