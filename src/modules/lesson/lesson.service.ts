@@ -91,6 +91,19 @@ export class LessonService {
 		};
 	}
 
+	async getLessonsByTopic(topicId: string) {
+		if (!Types.ObjectId.isValid(topicId)) {
+			throw new NotFoundException(`Invalid topic ID: ${topicId}`);
+		}
+
+		const lessons = await LessonModel.find({ topic: topicId })
+			.sort({ order: 1 })
+			.populate("topic", "title")
+			.exec();
+
+		return lessons;
+	}
+
 	async updateLesson(id: string, dto: UpdateLessonRequest) {
 		if (!Types.ObjectId.isValid(id)) {
 			throw new NotFoundException(`Invalid ID: ${id}`);
