@@ -1,7 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UserLessonProgressModel, LessonModel, UserModel } from "@db/models";
-import { Types } from "mongoose";
+import {
+	ExerciseModel,
+	LessonModel,
+	UserExerciseProgressModel,
+	UserLessonProgressModel,
+	UserModel,
+} from "@db/models";
 import { CompleteLessonRequest } from "./dto/complete-lesson.request";
+import { Types } from "mongoose";
 
 @Injectable()
 export class UserProgressService {
@@ -31,7 +37,8 @@ export class UserProgressService {
 				weekly_xp: xp,
 			},
 		});
-		if (lesson.type.includes("heart_recovery")) {
+
+		if (lesson.mode === "heart_recovery") {
 			await UserModel.findByIdAndUpdate(userId, {
 				$inc: { hearts: 1 },
 			});
@@ -48,8 +55,7 @@ export class UserProgressService {
 		const lastActive = user.last_active_date || user.createdAt || now;
 		const daysDiff = Math.floor((+now - +lastActive) / (1000 * 60 * 60 * 24));
 
-		if (daysDiff === 0) {
-		} else if (daysDiff === 1) {
+		if (daysDiff === 1) {
 			user.is_freeze = true;
 			user.freeze_count = 2;
 		} else if (daysDiff === 2) {
@@ -84,7 +90,7 @@ export class UserProgressService {
 
 		let lessons = await LessonModel.find({
 			_id: { $in: completedLessonIds },
-			type: { $in: ["heart_recovery"] },
+			mode: "heart_recovery",
 		});
 
 		if (lessons.length === 0) {
@@ -101,8 +107,58 @@ export class UserProgressService {
 		}
 
 		const randomIndex = Math.floor(Math.random() * lessons.length);
-		const lesson = lessons[randomIndex];
+		return lessons[randomIndex];
+	}
 
-		return lesson;
+	async getLessonExercisesByMode(
+		userId: Types.ObjectId,
+		lessonId: Types.ObjectId,
+	) {
+		const lesson = await LessonModel.findById(lessonId);
+		if (!lesson) throw new NotFoundException("Lesson not found");
+
+		let exercises;
+
+		switch (lesson.mode) {
+			case "normal":
+				exercises = await ExerciseModel.find({ lesson: lesson._id });
+				break;
+
+			case "personalized": {
+				const mistakeExercises = await UserExerciseProgressModel.find({
+					user_id: userId,
+					is_mistake: true,
+				}).distinct("exercise_id");
+
+				exercises = await ExerciseModel.find({
+					_id: { $in: mistakeExercises },
+				});
+				break;
+			}
+
+			case "mixed": {
+				const userLessons = await UserLessonProgressModel.find({
+					user_id: userId,
+				}).distinct("lesson_id");
+
+				exercises = await ExerciseModel.aggregate([
+					{ $match: { lesson: { $in: userLessons } } },
+					{ $sample: { size: 10 } },
+				]);
+				break;
+			}
+
+			case "heart_recovery":
+				exercises = await ExerciseModel.find({ lesson: lesson._id });
+				break;
+
+			default:
+				throw new NotFoundException("Unsupported lesson mode");
+		}
+
+		return {
+			mode: lesson.mode,
+			exercises,
+		};
 	}
 }

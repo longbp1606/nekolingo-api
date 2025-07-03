@@ -7,7 +7,7 @@ export interface ILesson {
 	topic: Types.ObjectId;
 
 	type: string[];
-	mode: "normal" | "personalized" | "mixed";
+	mode: "normal" | "personalized" | "mixed" | "heart_recovery";
 
 	description?: string;
 }

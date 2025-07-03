@@ -22,4 +22,10 @@ export class LeaderboardController {
 	async generateWeekly() {
 		return this.leaderboardService.createWeeklyLeaderboard();
 	}
+	@Get("weekly")
+	@ApiOperation({ summary: "Lấy bảng xếp hạng tuần hiện tại" })
+	@UseGuards(AuthGuard)
+	async getWeeklyLeaderboard() {
+		return this.leaderboardService.getWeeklyLeaderboard();
+	}
 }
