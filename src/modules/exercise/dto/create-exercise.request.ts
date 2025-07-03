@@ -7,6 +7,7 @@ import {
 	IsArray,
 	IsObject,
 	ValidateNested,
+	IsDefined,
 } from "class-validator";
 
 export class CreateExerciseRequest {
@@ -42,6 +43,7 @@ export class CreateExerciseRequest {
 	question: string;
 
 	@ApiProperty()
+	@IsDefined()
 	correct_answer: any;
 
 	@ApiPropertyOptional({ type: [String] })
