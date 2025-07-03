@@ -61,6 +61,18 @@ export class LessonController {
 		return this.svc.getLessons(p, t);
 	}
 
+	@Get("/topic/:topicId")
+	@ApiOperation({ summary: "Lấy danh sách bài học theo chủ đề" })
+	@ApiParam({ name: "topicId", description: "ID của chủ đề" })
+	@ApiResponse({
+		status: 200,
+		description: "Trả về danh sách bài học theo chủ đề",
+		type: [LessonModel],
+	})
+	async findByTopic(@Param("topicId") topicId: string) {
+		return this.svc.getLessonsByTopic(topicId);
+	}
+
 	@Get(":id")
 	@ApiOperation({ summary: "Lấy chi tiết một bài học theo ID" })
 	@ApiParam({ name: "id", description: "ID của bài học" })

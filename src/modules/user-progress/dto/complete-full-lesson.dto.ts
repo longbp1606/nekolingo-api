@@ -5,6 +5,7 @@ import {
 	IsArray,
 	IsOptional,
 	IsNumber,
+	IsDefined,
 } from "class-validator";
 import { Type } from "class-transformer";
 
@@ -14,6 +15,7 @@ class ExerciseAnswerDto {
 	exercise_id: string;
 
 	@ApiProperty()
+	@IsDefined()
 	user_answer: any;
 
 	@ApiProperty({ required: false })

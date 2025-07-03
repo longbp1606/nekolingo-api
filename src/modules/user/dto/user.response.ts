@@ -25,7 +25,19 @@ export class UserResponse {
 	xp: number;
 
 	@ApiProperty()
+	weeklyXp: number;
+
+	@ApiProperty()
 	streakDays: number;
+
+	@ApiProperty()
+	isFreeze: boolean;
+
+	@ApiProperty()
+	lastActiveDate: Date;
+
+	@ApiProperty()
+	freezeCount: number;
 
 	@ApiProperty()
 	languageFrom: string;
@@ -45,7 +57,11 @@ export class UserResponse {
 			avatarUrl: d.avatar_url,
 			currentLevel: d.current_level,
 			xp: d.xp,
+			weeklyXp: d.weekly_xp,
 			streakDays: d.streak_days,
+			freezeCount: d.freeze_count,
+			isFreeze: d.is_freeze,
+			lastActiveDate: d.last_active_date,
 			languageFrom: d.language_from,
 			languageTo: d.language_to,
 			is_premiere: d.is_premiere,
