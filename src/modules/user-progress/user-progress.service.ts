@@ -1,7 +1,15 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UserLessonProgressModel, LessonModel, UserModel } from "@db/models";
-import { Types } from "mongoose";
+import {
+	ExerciseModel,
+	LessonModel,
+	UserExerciseProgressModel,
+	UserLessonProgressModel,
+	UserModel,
+} from "@db/models";
 import { CompleteLessonRequest } from "./dto/complete-lesson.request";
+import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
+import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
+import { Types } from "mongoose";
 
 @Injectable()
 export class UserProgressService {
@@ -31,13 +39,47 @@ export class UserProgressService {
 				weekly_xp: xp,
 			},
 		});
-		if (lesson.type.includes("heart_recovery")) {
+
+		if (lesson.mode === "heart_recovery") {
 			await UserModel.findByIdAndUpdate(userId, {
 				$inc: { hearts: 1 },
 			});
 		}
 
 		return this.updateStreak(userId);
+	}
+
+	async completeFullLesson(dto: CompleteFullLessonDto) {
+		const userId = new Types.ObjectId(dto.user_id);
+		const lessonId = new Types.ObjectId(dto.lesson_id);
+
+		for (const ex of dto.exercises) {
+			const exerciseId = new Types.ObjectId(ex.exercise_id);
+			const exercise = await ExerciseModel.findById(exerciseId);
+			if (!exercise) continue;
+
+			const isCorrect = this.checkAnswerCorrect(
+				exercise.correct_answer,
+				ex.user_answer,
+			);
+
+			await UserExerciseProgressModel.findOneAndUpdate(
+				{ user_id: userId, exercise_id: exerciseId },
+				{
+					completed_at: new Date(),
+					is_mistake: !isCorrect,
+					user_answer: ex.user_answer,
+					answer_time: ex.answer_time,
+					score: isCorrect ? 1 : 0,
+				},
+				{ upsert: true },
+			);
+		}
+
+		return this.completeLesson({
+			user_id: dto.user_id,
+			lesson_id: dto.lesson_id,
+		});
 	}
 
 	async updateStreak(userId: Types.ObjectId) {
@@ -48,8 +90,7 @@ export class UserProgressService {
 		const lastActive = user.last_active_date || user.createdAt || now;
 		const daysDiff = Math.floor((+now - +lastActive) / (1000 * 60 * 60 * 24));
 
-		if (daysDiff === 0) {
-		} else if (daysDiff === 1) {
+		if (daysDiff === 1) {
 			user.is_freeze = true;
 			user.freeze_count = 2;
 		} else if (daysDiff === 2) {
@@ -84,7 +125,7 @@ export class UserProgressService {
 
 		let lessons = await LessonModel.find({
 			_id: { $in: completedLessonIds },
-			type: { $in: ["heart_recovery"] },
+			mode: "heart_recovery",
 		});
 
 		if (lessons.length === 0) {
@@ -101,8 +142,102 @@ export class UserProgressService {
 		}
 
 		const randomIndex = Math.floor(Math.random() * lessons.length);
-		const lesson = lessons[randomIndex];
+		return lessons[randomIndex];
+	}
 
-		return lesson;
+	async getLessonExercisesByMode(
+		userId: Types.ObjectId,
+		lessonId: Types.ObjectId,
+	) {
+		const lesson = await LessonModel.findById(lessonId);
+		if (!lesson) throw new NotFoundException("Lesson not found");
+
+		let exercises;
+
+		switch (lesson.mode) {
+			case "normal":
+				exercises = await ExerciseModel.find({ lesson: lesson._id });
+				break;
+
+			case "personalized": {
+				const mistakeExercises = await UserExerciseProgressModel.find({
+					user_id: userId,
+					is_mistake: true,
+				}).distinct("exercise_id");
+
+				exercises = await ExerciseModel.find({
+					_id: { $in: mistakeExercises },
+				});
+				break;
+			}
+
+			case "mixed": {
+				const userLessons = await UserLessonProgressModel.find({
+					user_id: userId,
+				}).distinct("lesson_id");
+
+				exercises = await ExerciseModel.aggregate([
+					{ $match: { lesson: { $in: userLessons } } },
+					{ $sample: { size: 10 } },
+				]);
+				break;
+			}
+
+			case "heart_recovery":
+				exercises = await ExerciseModel.find({ lesson: lesson._id });
+				break;
+
+			default:
+				throw new NotFoundException("Unsupported lesson mode");
+		}
+
+		return {
+			mode: lesson.mode,
+			exercises,
+		};
+	}
+
+	async submitExercise(dto: SubmitExerciseDto) {
+		const userId = new Types.ObjectId(dto.user_id);
+		const exerciseId = new Types.ObjectId(dto.exercise_id);
+
+		const exercise = await ExerciseModel.findById(exerciseId);
+		if (!exercise) throw new NotFoundException("Exercise not found");
+
+		const isCorrect = this.checkAnswerCorrect(
+			exercise.correct_answer,
+			dto.user_answer,
+		);
+
+		await UserExerciseProgressModel.findOneAndUpdate(
+			{ user_id: userId, exercise_id: exerciseId },
+			{
+				completed_at: new Date(),
+				is_mistake: !isCorrect,
+				user_answer: dto.user_answer,
+				answer_time: dto.answer_time,
+				score: isCorrect ? 1 : 0,
+			},
+			{ upsert: true },
+		);
+
+		return {
+			correct: isCorrect,
+			is_mistake: !isCorrect,
+		};
+	}
+
+	private checkAnswerCorrect(correct: any, userAnswer: any): boolean {
+		if (Array.isArray(correct)) {
+			return (
+				Array.isArray(userAnswer) &&
+				correct.length === userAnswer.length &&
+				correct.every((val, idx) => val === userAnswer[idx])
+			);
+		}
+		if (typeof correct === "object") {
+			return JSON.stringify(correct) === JSON.stringify(userAnswer);
+		}
+		return correct === userAnswer;
 	}
 }

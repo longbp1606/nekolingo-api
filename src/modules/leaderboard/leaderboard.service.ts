@@ -7,7 +7,7 @@ import {
 
 @Injectable()
 export class LeaderboardService {
-	async getOverallLeaderboard(limit = 100) {
+	async getOverallLeaderboard(limit = 30) {
 		return UserModel.find({}, "username avatar_url xp")
 			.sort({ xp: -1 })
 			.limit(limit);
@@ -25,7 +25,7 @@ export class LeaderboardService {
 			date_end: end,
 		});
 
-		const topUsers = await UserModel.find().sort({ weekly_xp: -1 }).limit(100);
+		const topUsers = await UserModel.find().sort({ weekly_xp: -1 }).limit(30);
 
 		await WeeklyLeaderboardModel.insertMany(
 			topUsers.map((user) => ({
@@ -47,5 +47,15 @@ export class LeaderboardService {
 		const day = now.getDay();
 		const diff = now.getDate() - day + (day === 0 ? -6 : 1);
 		return new Date(now.setDate(diff));
+	}
+	async getWeeklyLeaderboard() {
+		const currentWeek = this.getWeekNumber();
+		const leaderboard = await LeaderboardModel.findOne({ week: currentWeek });
+
+		if (!leaderboard) return [];
+
+		return WeeklyLeaderboardModel.find({ leaderboard_id: leaderboard._id })
+			.populate("user_id", "username avatar_url weekly_xp")
+			.sort({ "user_id.weekly_xp": -1 });
 	}
 }

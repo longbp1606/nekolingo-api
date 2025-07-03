@@ -25,7 +25,6 @@ import { CreateQuestRequest } from "./dto/create-quest.request";
 export class QuestController {
 	constructor(private readonly questService: QuestService) {}
 
-	// USER ROUTES
 	@Post("daily")
 	@ApiOperation({ summary: "Tạo daily quest cho người dùng" })
 	@UseGuards(AuthGuard)
