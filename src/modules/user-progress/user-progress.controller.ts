@@ -10,21 +10,14 @@ import {
 	ApiParam,
 	ApiTags,
 } from "@nestjs/swagger";
+import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
+import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
 
 @ApiTags("User Progress")
 @ApiBearerAuth()
 @Controller("user-progress")
 export class UserProgressController {
 	constructor(private readonly userProgressService: UserProgressService) {}
-
-	@Post("complete-lesson")
-	@ApiOperation({
-		summary: "Đánh dấu lesson đã hoàn thành và xử lý XP, streak, phục hồi tim",
-	})
-	@ApiBody({ type: CompleteLessonRequest })
-	async completeLesson(@Body() dto: CompleteLessonRequest) {
-		return this.userProgressService.completeLesson(dto);
-	}
 
 	@Post("update-streak")
 	@ApiOperation({ summary: "Cập nhật streak của người dùng" })
@@ -52,5 +45,20 @@ export class UserProgressController {
 		const userId = new Types.ObjectId(dto.user_id);
 		const lessonId = new Types.ObjectId(dto.lesson_id);
 		return this.userProgressService.getLessonExercisesByMode(userId, lessonId);
+	}
+	@Post("submit-exercise")
+	@ApiOperation({
+		summary: "Nộp kết quả mỗi câu bài tập, lưu metadata sai/đúng",
+	})
+	@ApiBody({ type: SubmitExerciseDto })
+	async submitExercise(@Body() dto: SubmitExerciseDto) {
+		return this.userProgressService.submitExercise(dto);
+	}
+
+	@Post("complete-full-lesson")
+	@ApiOperation({ summary: "Nộp toàn bộ bài học, ghi nhận bài tập và cộng XP" })
+	@ApiBody({ type: CompleteFullLessonDto })
+	async completeFullLesson(@Body() dto: CompleteFullLessonDto) {
+		return this.userProgressService.completeFullLesson(dto);
 	}
 }

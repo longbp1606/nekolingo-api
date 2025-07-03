@@ -7,6 +7,8 @@ import {
 	UserModel,
 } from "@db/models";
 import { CompleteLessonRequest } from "./dto/complete-lesson.request";
+import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
+import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
 import { Types } from "mongoose";
 
 @Injectable()
@@ -45,6 +47,39 @@ export class UserProgressService {
 		}
 
 		return this.updateStreak(userId);
+	}
+
+	async completeFullLesson(dto: CompleteFullLessonDto) {
+		const userId = new Types.ObjectId(dto.user_id);
+		const lessonId = new Types.ObjectId(dto.lesson_id);
+
+		for (const ex of dto.exercises) {
+			const exerciseId = new Types.ObjectId(ex.exercise_id);
+			const exercise = await ExerciseModel.findById(exerciseId);
+			if (!exercise) continue;
+
+			const isCorrect = this.checkAnswerCorrect(
+				exercise.correct_answer,
+				ex.user_answer,
+			);
+
+			await UserExerciseProgressModel.findOneAndUpdate(
+				{ user_id: userId, exercise_id: exerciseId },
+				{
+					completed_at: new Date(),
+					is_mistake: !isCorrect,
+					user_answer: ex.user_answer,
+					answer_time: ex.answer_time,
+					score: isCorrect ? 1 : 0,
+				},
+				{ upsert: true },
+			);
+		}
+
+		return this.completeLesson({
+			user_id: dto.user_id,
+			lesson_id: dto.lesson_id,
+		});
 	}
 
 	async updateStreak(userId: Types.ObjectId) {
@@ -160,5 +195,49 @@ export class UserProgressService {
 			mode: lesson.mode,
 			exercises,
 		};
+	}
+
+	async submitExercise(dto: SubmitExerciseDto) {
+		const userId = new Types.ObjectId(dto.user_id);
+		const exerciseId = new Types.ObjectId(dto.exercise_id);
+
+		const exercise = await ExerciseModel.findById(exerciseId);
+		if (!exercise) throw new NotFoundException("Exercise not found");
+
+		const isCorrect = this.checkAnswerCorrect(
+			exercise.correct_answer,
+			dto.user_answer,
+		);
+
+		await UserExerciseProgressModel.findOneAndUpdate(
+			{ user_id: userId, exercise_id: exerciseId },
+			{
+				completed_at: new Date(),
+				is_mistake: !isCorrect,
+				user_answer: dto.user_answer,
+				answer_time: dto.answer_time,
+				score: isCorrect ? 1 : 0,
+			},
+			{ upsert: true },
+		);
+
+		return {
+			correct: isCorrect,
+			is_mistake: !isCorrect,
+		};
+	}
+
+	private checkAnswerCorrect(correct: any, userAnswer: any): boolean {
+		if (Array.isArray(correct)) {
+			return (
+				Array.isArray(userAnswer) &&
+				correct.length === userAnswer.length &&
+				correct.every((val, idx) => val === userAnswer[idx])
+			);
+		}
+		if (typeof correct === "object") {
+			return JSON.stringify(correct) === JSON.stringify(userAnswer);
+		}
+		return correct === userAnswer;
 	}
 }
