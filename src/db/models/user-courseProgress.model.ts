@@ -4,6 +4,7 @@ export interface IUserCourseProgress {
 	user_id: Types.ObjectId;
 	course_id: Types.ObjectId;
 	start_date?: Date;
+	completed_at?: Date;
 }
 
 export type UserCourseProgressDocumentType =
@@ -21,20 +22,15 @@ const UserCourseProgressSchema = new Schema<
 	UserCourseProgressModelType
 >(
 	{
-		user_id: {
-			type: Schema.Types.ObjectId,
-			ref: "User",
-			required: true,
-		},
-		course_id: {
-			type: Schema.Types.ObjectId,
-			ref: "Course",
-			required: true,
-		},
-		start_date: { type: Date, required: false },
+		user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+		course_id: { type: Schema.Types.ObjectId, ref: "Course", required: true },
+		start_date: { type: Date },
+		completed_at: { type: Date },
 	},
 	{ timestamps: true },
 );
+
+UserCourseProgressSchema.index({ user_id: 1, course_id: 1 }, { unique: true });
 
 export const UserCourseProgressModel = mongoose.model<
 	IUserCourseProgress,

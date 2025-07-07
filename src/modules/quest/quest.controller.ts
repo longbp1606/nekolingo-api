@@ -7,6 +7,7 @@ import {
 	Body,
 	Req,
 	UseGuards,
+	Get,
 } from "@nestjs/common";
 import {
 	ApiTags,
@@ -30,6 +31,12 @@ export class QuestController {
 	@UseGuards(AuthGuard)
 	async generateDaily(@Req() req: any) {
 		return this.questService.generateDailyQuestsForUser(req.user.id);
+	}
+	@Get("daily")
+	@ApiOperation({ summary: "Lấy danh sách daily quest của người dùng" })
+	@UseGuards(AuthGuard)
+	async getDaily(@Req() req: any) {
+		return this.questService.getDailyQuestsForUser(req.user.id);
 	}
 
 	@Patch("daily/:id/complete")

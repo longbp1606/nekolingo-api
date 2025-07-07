@@ -16,3 +16,4 @@ export * from "./weekly-leaderboard.model";
 export * from "./user-exerciseProgress.model";
 export * from "./user-lessonProgress.model";
 export * from "./user-topicProgress.model";
+export * from "./user-courseProgress.model";

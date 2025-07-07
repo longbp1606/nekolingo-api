@@ -1,4 +1,4 @@
-import mongoose, { HydratedDocument, Model, Schema } from "mongoose";
+import mongoose, { HydratedDocument, Model, Schema, Types } from "mongoose";
 import { UserRoleEnum } from "src/utils/enum";
 
 export interface IUser {
@@ -7,12 +7,10 @@ export interface IUser {
 	role: UserRoleEnum;
 	username: string;
 	avatar_url: string;
-
 	current_level: number;
 	xp: number;
 	weekly_xp: number;
 	hearts: number;
-
 	streak_days: number;
 	is_freeze: boolean;
 	last_active_date?: Date;
@@ -20,13 +18,15 @@ export interface IUser {
 	language_from: string;
 	language_to: string;
 	is_premiere: boolean;
+	balance: number;
+	current_course?: Types.ObjectId;
+	current_topic?: Types.ObjectId;
+	current_lesson?: Types.ObjectId;
 	createdAt?: Date;
 	updatedAt?: Date;
-	balance: number;
 }
 
 export type UserDocumentType = HydratedDocument<IUser>;
-
 export type UserModelType = Model<IUser, {}, {}, {}, UserDocumentType>;
 
 const UserSchema = new Schema<IUser, UserModelType>(
@@ -34,23 +34,23 @@ const UserSchema = new Schema<IUser, UserModelType>(
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
 		role: { type: Number, enum: UserRoleEnum, default: UserRoleEnum.USER },
-
 		username: { type: String },
 		avatar_url: { type: String },
-
 		current_level: { type: Number, default: 1 },
 		xp: { type: Number, default: 0 },
 		weekly_xp: { type: Number, default: 0 },
 		hearts: { type: Number, default: 5 },
-
 		streak_days: { type: Number, default: 0 },
 		is_freeze: { type: Boolean, default: false },
 		last_active_date: { type: Date },
-		freeze_count: { type: Number, required: false, default: 0 },
-
+		freeze_count: { type: Number, default: 0 },
 		language_from: { type: String },
 		language_to: { type: String },
 		is_premiere: { type: Boolean, default: false },
+		balance: { type: Number, default: 0 },
+		current_course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+		current_topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
+		current_lesson: { type: mongoose.Schema.Types.ObjectId, ref: "Lesson" },
 	},
 	{ timestamps: true },
 );

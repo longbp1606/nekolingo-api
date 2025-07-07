@@ -16,6 +16,10 @@ export class QuestService {
 		);
 	}
 
+	async getDailyQuestsForUser(userId: string) {
+		return DailyQuestModel.find({ user_id: userId }).populate("quest_id");
+	}
+
 	async completeQuest(userId: string, questId: string) {
 		return DailyQuestModel.findOneAndUpdate(
 			{ _id: questId, user_id: userId },
