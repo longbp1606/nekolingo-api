@@ -31,13 +31,16 @@ export class UserService {
 	}
 
 	async getUsers() {
-		return UserModel.find();
+		return UserModel.find({ is_active: true });
 	}
 
 	async getUserById(id: string) {
 		const userId = new Types.ObjectId(id);
 
-		const user = await UserModel.findById(userId)
+		const user = await UserModel.findOne({
+			_id: userId,
+			is_active: true,
+		})
 			.populate("current_lesson")
 			.populate("current_topic")
 			.populate("current_course");
@@ -124,6 +127,7 @@ export class UserService {
 		const user = new UserModel({
 			...dto,
 			password: bcrypt.hashSync(dto.password, 10),
+			is_active: true,
 		});
 		await user.save();
 	}
@@ -133,6 +137,6 @@ export class UserService {
 	}
 
 	async deleteUser(id: string) {
-		await UserModel.findByIdAndDelete(id);
+		await UserModel.findByIdAndUpdate(id, { is_active: false });
 	}
 }

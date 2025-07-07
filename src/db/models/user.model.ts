@@ -19,6 +19,7 @@ export interface IUser {
 	language_to: string;
 	is_premiere: boolean;
 	balance: number;
+	is_active: boolean;
 	current_course?: Types.ObjectId;
 	current_topic?: Types.ObjectId;
 	current_lesson?: Types.ObjectId;
@@ -48,6 +49,7 @@ const UserSchema = new Schema<IUser, UserModelType>(
 		language_to: { type: String },
 		is_premiere: { type: Boolean, default: false },
 		balance: { type: Number, default: 0 },
+		is_active: { type: Boolean, default: true },
 		current_course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
 		current_topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
 		current_lesson: { type: mongoose.Schema.Types.ObjectId, ref: "Lesson" },
