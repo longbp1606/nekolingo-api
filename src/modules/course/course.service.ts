@@ -3,7 +3,12 @@ import {
 	NotFoundException,
 	BadRequestException,
 } from "@nestjs/common";
-import { CourseModel, LanguageModel, LessonModel } from "@db/models";
+import {
+	CourseModel,
+	LanguageModel,
+	LessonModel,
+	TopicModel,
+} from "@db/models";
 import { CreateCourseRequest, UpdateCourseRequest } from "./dto";
 import { PaginationDto } from "@utils";
 import { ValidationError } from "class-validator";
@@ -97,6 +102,37 @@ export class CourseService {
 			throw new NotFoundException(`Course with ID ${id} not found`);
 		}
 		return course;
+	}
+
+	async getCourseMetadata(id: string) {
+		if (!Types.ObjectId.isValid(id)) {
+			throw new NotFoundException(`Invalid ID: ${id}`);
+		}
+
+		const course = await CourseModel.findById(id).lean();
+
+		if (!course) {
+			throw new NotFoundException(`Course with ID ${id} not found`);
+		}
+
+		const topics = await TopicModel.find({ course: id }).lean();
+
+		const topicIds = topics.map((topic) => topic._id);
+		const lessons = await LessonModel.find({ topic: { $in: topicIds } }).lean();
+
+		const topicsWithLessons = topics.map((topic) => {
+			const topicLessons = lessons.filter(
+				(lesson) => lesson.topic.toString() === topic._id.toString(),
+			);
+			return { ...topic, lessons: topicLessons };
+		});
+
+		const metadata = {
+			course,
+			topics: topicsWithLessons,
+		};
+
+		return metadata;
 	}
 
 	async updateCourse(id: string, dto: UpdateCourseRequest) {
