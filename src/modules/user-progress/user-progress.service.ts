@@ -2,9 +2,12 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import {
 	ExerciseModel,
 	LessonModel,
+	TopicModel,
 	UserExerciseProgressModel,
 	UserLessonProgressModel,
 	UserModel,
+	UserTopicProgressModel,
+	UserCourseProgressModel,
 } from "@db/models";
 import { CompleteLessonRequest } from "./dto/complete-lesson.request";
 import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
@@ -17,7 +20,14 @@ export class UserProgressService {
 		const userId = new Types.ObjectId(dto.user_id);
 		const lessonId = new Types.ObjectId(dto.lesson_id);
 
-		const lesson = await LessonModel.findById(lessonId);
+		const lesson = await LessonModel.findById(lessonId).populate({
+			path: "topic",
+			populate: {
+				path: "course",
+				model: "Course",
+			},
+		});
+
 		if (!lesson) throw new NotFoundException("Lesson not found");
 
 		const xp = lesson.xp_reward || 10;
@@ -33,10 +43,19 @@ export class UserProgressService {
 			{ upsert: true },
 		);
 
+		const topic = lesson.topic as any;
+		const courseId = topic?.course?._id || topic?.course;
+		const topicId = topic?._id || lesson.topic;
+
 		await UserModel.findByIdAndUpdate(userId, {
 			$inc: {
 				xp: xp,
 				weekly_xp: xp,
+			},
+			$set: {
+				current_lesson: lesson._id,
+				current_topic: topicId,
+				current_course: courseId,
 			},
 		});
 
@@ -46,12 +65,71 @@ export class UserProgressService {
 			});
 		}
 
+		if (topicId) {
+			const totalLessons = await LessonModel.countDocuments({ topic: topicId });
+			const completedLessons = await UserLessonProgressModel.countDocuments({
+				user_id: userId,
+				lesson_id: {
+					$in: await LessonModel.find({ topic: topicId }).distinct("_id"),
+				},
+				completed_at: { $ne: null },
+			});
+
+			if (totalLessons > 0 && completedLessons === totalLessons) {
+				await UserTopicProgressModel.updateOne(
+					{ user_id: userId, topic_id: topicId },
+					{
+						$set: {
+							proficiency_level: 100,
+							last_practiced_at: new Date(),
+						},
+					},
+					{ upsert: true },
+				);
+			}
+		}
+
+		if (courseId) {
+			const topicIdsInCourse = await TopicModel.find({
+				course: courseId,
+			}).distinct("_id");
+
+			const completedTopicCount = await UserTopicProgressModel.countDocuments({
+				user_id: userId,
+				topic_id: { $in: topicIdsInCourse },
+				proficiency_level: { $gte: 100 },
+			});
+
+			if (
+				topicIdsInCourse.length > 0 &&
+				completedTopicCount === topicIdsInCourse.length
+			) {
+				await UserCourseProgressModel.updateOne(
+					{ user_id: userId, course_id: courseId },
+					{
+						$set: { completed_at: new Date() },
+						$setOnInsert: { start_date: new Date() },
+					},
+					{ upsert: true },
+				);
+			} else {
+				await UserCourseProgressModel.updateOne(
+					{ user_id: userId, course_id: courseId },
+					{ $setOnInsert: { start_date: new Date() } },
+					{ upsert: true },
+				);
+			}
+		}
+
 		return this.updateStreak(userId);
 	}
 
 	async completeFullLesson(dto: CompleteFullLessonDto) {
 		const userId = new Types.ObjectId(dto.user_id);
 		const lessonId = new Types.ObjectId(dto.lesson_id);
+
+		const lesson = await LessonModel.findById(lessonId);
+		if (!lesson) throw new NotFoundException("Lesson not found");
 
 		for (const ex of dto.exercises) {
 			const exerciseId = new Types.ObjectId(ex.exercise_id);
