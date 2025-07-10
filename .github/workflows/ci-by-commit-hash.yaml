@@ -1,9 +1,9 @@
 # This is a Github Actions CI template file
 name: Workflow Name
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - deploy/dev
 
   workflow_dispatch:
   #   inputs:
@@ -11,9 +11,8 @@ on:
   #       description: Variable description
   #       type: string
 env:
-  REPO_ID: repo-id
-  # GitOps API
-  API_URI: https://api.github.com/repos/longlt201203/my-gitops/actions/workflows/105840951/dispatches
+  REPO_ID: nekolingo-api
+  APP_NAME: nekolingo-api
 jobs:
   build-and-push-docker:
     runs-on: ubuntu-latest
@@ -35,14 +34,14 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:latest , ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:${{ steps.commit.outputs.short }}
 
-  trigger-gitops-workflows:
-    runs-on: ubuntu-latest
+  trigger-cd:
+    needs: build-and-push-docker
+    runs-on: self-hosted
     steps:
-      - id: commit
-        uses: prompt/actions-commit-hash@v3
-      - name: Call dispatch workflow API
+      - name: Pull Docker Image
         run: |
-          curl --location --request POST '${{ env.API_URI }}' \
-          --header 'Authorization: Bearer ${{ secrets.PAT }}' \
-          --header 'Content-Type: application/json' \
-          --data '{"ref":"main","inputs":{"run_id":"${{ steps.commit.outputs.short }}","project":"${{ env.REPO_ID }}"}}'
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:lastest
+      - name: Run Docker Image via Docker Compose
+        run: |
+          cd ~/nekolingo-api
+          docker-compose up -d ${{ env.APP_NAME }}
