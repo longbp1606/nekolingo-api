@@ -78,6 +78,19 @@ export class CourseController {
 		return this.svc.getCourseById(id);
 	}
 
+	@Get("/metadata/:id")
+	@ApiOperation({ summary: "Lấy chi tiết một khóa học theo ID" })
+	@ApiParam({ name: "id", description: "ID của khóa học" })
+	@ApiResponse({
+		status: 200,
+		description: "Trả về một khóa học",
+		type: CourseModel,
+	})
+	@ApiResponse({ status: 404, description: "Khóa học không tìm thấy" })
+	async findOneMetadata(@Param("id") id: string) {
+		return this.svc.getCourseMetadata(id);
+	}
+
 	@Patch(":id")
 	@ApiOperation({ summary: "Cập nhật một khóa học theo ID" })
 	@ApiParam({ name: "id", description: "ID của khóa học" })
