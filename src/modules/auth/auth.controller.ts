@@ -31,7 +31,6 @@ export class AuthController {
 	@ApiBearerAuth()
 	async getProfile() {
 		const data = this.authService.getProfileCls();
-		console.log(data); // TODO: remove thi
 		return new ApiResponseDto(data, null, "Get profile successfully!");
 	}
 }

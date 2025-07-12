@@ -81,10 +81,19 @@ export class LessonService {
 		const lesson = await LessonModel.findById(id)
 			.populate("topic", "title")
 			.lean();
-		const exercises = await ExerciseModel.find({ lesson: id })
+		const getExercise = await ExerciseModel.find({ lesson: id })
 			.populate("vocabulary", "word")
 			.populate("grammar", "name")
 			.lean();
+
+		const exercises = getExercise.map((exercise) => {
+			return {
+				...exercise,
+				isMistake: false,
+				answer: null,
+				completed_at: null,
+			};
+		});
 		return {
 			...lesson,
 			exercises,
