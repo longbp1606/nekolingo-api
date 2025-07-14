@@ -65,6 +65,9 @@ export class UserResponse {
 
 	@ApiProperty()
 	currentLesson: string;
+
+	@ApiProperty()
+	createdAt: Date;
 	static fromDocument(d: UserDocumentType): UserResponse {
 		return {
 			id: d._id.toString(),
@@ -85,9 +88,10 @@ export class UserResponse {
 			isPremiere: d.is_premiere,
 			balance: d.balance,
 			isActive: d.is_active,
-			currentCourse: d.current_course.toString(),
-			currentTopic: d.current_topic.toString(),
-			currentLesson: d.current_lesson.toString(),
+			currentCourse: d.current_course ? d.current_course.toString() : null,
+			currentTopic: d.current_topic ? d.current_topic.toString() : null,
+			currentLesson: d.current_lesson ? d.current_lesson.toString() : null,
+			createdAt: d.createdAt,
 		};
 	}
 

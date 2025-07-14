@@ -22,6 +22,7 @@ import {
 	ApiBearerAuth,
 } from "@nestjs/swagger";
 import { LanguageModel } from "@db/models";
+import { SkipAuth } from "@modules/auth";
 
 @ApiTags("Language")
 @ApiBearerAuth()
@@ -59,6 +60,7 @@ export class LanguageController {
 			},
 		},
 	})
+	@SkipAuth()
 	async findAll(@Query("page") page: string, @Query("take") take: string) {
 		const p = parseInt(page) > 0 ? parseInt(page) : 1;
 		const t = parseInt(take) > 0 ? parseInt(take) : 10;
