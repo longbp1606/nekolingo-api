@@ -4,10 +4,11 @@ import * as jwt from "jsonwebtoken";
 import { Env, NekolingoClsStore } from "@utils";
 import { ClsService } from "nestjs-cls";
 import { BasicLoginRequest, BasicRegisterRequest } from "./dto";
-import { UserModel } from "@db/models";
+import { CourseModel, LessonModel, TopicModel, UserModel } from "@db/models";
 import { EmailNotFoundError, WrongPasswordError } from "./errors";
 import * as bcrypt from "bcrypt";
 import { ExistedEmailError } from "./errors/existed-email.error";
+import { SetupRegisterRequest } from "./dto/setup-register.request";
 
 @Injectable()
 export class AuthService {
@@ -55,6 +56,36 @@ export class AuthService {
 		await UserModel.create({
 			...dto,
 			password: encryptedPassword,
+		});
+	}
+
+	async setupRegister(dto: SetupRegisterRequest) {
+		const existedEmail = await UserModel.findOne({ email: dto.email });
+		if (existedEmail) throw new ExistedEmailError();
+		const encryptedPassword = bcrypt.hashSync(dto.password, 10);
+		const currentCourse = await CourseModel.findOne({
+			language_from: dto.language_from,
+			language_to: dto.language_to,
+		});
+		const currentTopic = await TopicModel.find({
+			course: currentCourse._id,
+		});
+		const currentLesson = await LessonModel.find({
+			topic: currentTopic.at(0)._id,
+		});
+
+		await UserModel.create({
+			email: dto.email,
+			password: encryptedPassword,
+			role: 0,
+			username: dto.username ? dto.username : dto.email.split("@")[0],
+			current_level: dto.current_level,
+			language_from: dto.language_from,
+			language_to: dto.language_to,
+			is_active: true,
+			current_course: currentCourse._id,
+			current_topic: currentTopic[0]._id,
+			current_lesson: currentLesson[0]._id,
 		});
 	}
 }

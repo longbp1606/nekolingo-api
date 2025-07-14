@@ -46,6 +46,8 @@ export class UserProgressService {
 		const topic = lesson.topic as any;
 		const courseId = topic?.course?._id || topic?.course;
 		const topicId = topic?._id || lesson.topic;
+		const lessons = await LessonModel.find({ topic: topicId });
+		const nextLesson = lessons.find((l) => l.order > lesson.order);
 
 		await UserModel.findByIdAndUpdate(userId, {
 			$inc: {
@@ -53,7 +55,7 @@ export class UserProgressService {
 				weekly_xp: xp,
 			},
 			$set: {
-				current_lesson: lesson._id,
+				current_lesson: nextLesson._id,
 				current_topic: topicId,
 				current_course: courseId,
 			},
@@ -141,6 +143,14 @@ export class UserProgressService {
 				ex.user_answer,
 			);
 
+			if (!isCorrect) {
+				await UserModel.findByIdAndUpdate(userId, {
+					$inc: {
+						hearts: -1,
+					},
+				});
+			}
+
 			await UserExerciseProgressModel.findOneAndUpdate(
 				{ user_id: userId, exercise_id: exerciseId },
 				{
@@ -164,23 +174,32 @@ export class UserProgressService {
 		const user = await UserModel.findById(userId);
 		if (!user) throw new NotFoundException("User not found");
 
+		const userLessonProgress = await UserLessonProgressModel.find({
+			user_id: userId,
+		});
+		const lastProgress = userLessonProgress.sort(
+			(a, b) => +b.completed_at - +a.completed_at,
+		)[0];
+
 		const now = new Date();
 		const lastActive = user.last_active_date || user.createdAt || now;
 		const daysDiff = Math.floor((+now - +lastActive) / (1000 * 60 * 60 * 24));
+		const lastDiff = Math.floor(
+			(+now - +lastProgress.completed_at) / (1000 * 60 * 60 * 24),
+		);
 
 		if (daysDiff === 1) {
 			user.is_freeze = true;
-			user.freeze_count = 2;
+			user.freeze_count -= 1;
 		} else if (daysDiff === 2) {
 			user.is_freeze = true;
-			user.freeze_count = 1;
-		} else if (daysDiff >= 3) {
-			user.streak_days = 1;
+			user.freeze_count -= 1;
+		} else if (daysDiff >= 3 && user.freeze_count === 0) {
+			user.streak_days = 0;
 			user.is_freeze = false;
-			user.freeze_count = 0;
 		}
 
-		if (daysDiff <= 1) {
+		if (lastDiff <= 1) {
 			user.streak_days += 1;
 			user.is_freeze = false;
 			user.freeze_count = 0;
