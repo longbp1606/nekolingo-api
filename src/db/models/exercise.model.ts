@@ -11,9 +11,9 @@ export interface IExercise {
 		| "true_false";
 
 	question: string;
-	correct_answer: string | string[] | number | object;
+	correct_answer: string | string[] | number | object | object[];
 
-	options?: string[];
+	options?: string[] | object[];
 	audio_url?: string;
 	image_url?: string;
 
