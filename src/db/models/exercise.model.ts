@@ -41,7 +41,7 @@ const ALLOWED_FORMATS = [
 	"reorder",
 	"image_select",
 	"multiple_choice",
-	"true_false",
+	"listening",
 ];
 
 const ExerciseSchema = new Schema<IExercise, ExerciseModelType>(
