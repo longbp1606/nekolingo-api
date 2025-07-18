@@ -7,6 +7,7 @@ import {
 	IsObject,
 	IsOptional,
 	IsString,
+	IsArray,
 } from "class-validator";
 
 export class UpdateExerciseRequest extends PartialType(CreateExerciseRequest) {
@@ -24,7 +25,7 @@ export class UpdateExerciseRequest extends PartialType(CreateExerciseRequest) {
 			"reorder",
 			"image_select",
 			"multiple_choice",
-			"true_false",
+			"listening",
 		],
 	})
 	@IsOptional()
@@ -34,7 +35,7 @@ export class UpdateExerciseRequest extends PartialType(CreateExerciseRequest) {
 		"reorder",
 		"image_select",
 		"multiple_choice",
-		"true_false",
+		"listening",
 	])
 	readonly question_format?: string;
 
@@ -44,10 +45,17 @@ export class UpdateExerciseRequest extends PartialType(CreateExerciseRequest) {
 	readonly question?: string;
 
 	@ApiPropertyOptional()
+	@IsOptional()
 	readonly correct_answer?: any;
 
-	@ApiPropertyOptional({ type: [String] })
-	readonly options?: string[];
+	@ApiPropertyOptional({
+		description: "Danh sách lựa chọn dạng string hoặc object",
+		example: ["Option A", { value: "Option B", image: "https://..." }],
+		type: [Object],
+	})
+	@IsOptional()
+	@IsArray()
+	readonly options?: (string | Record<string, any>)[];
 
 	@ApiPropertyOptional()
 	@IsOptional()
@@ -74,7 +82,12 @@ export class UpdateExerciseRequest extends PartialType(CreateExerciseRequest) {
 	@IsMongoId()
 	readonly grammar?: string;
 
-	@ApiPropertyOptional({ type: Object })
+	@ApiPropertyOptional({
+		description: "Dữ liệu mở rộng",
+		example: {
+			note: "Câu hỏi nâng cao",
+		},
+	})
 	@IsOptional()
 	@IsObject()
 	readonly extra_data?: Record<string, any>;
