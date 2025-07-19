@@ -17,3 +17,4 @@ export * from "./user-exerciseProgress.model";
 export * from "./user-lessonProgress.model";
 export * from "./user-topicProgress.model";
 export * from "./user-courseProgress.model";
+export * from "./user-streakDayProgress.model";

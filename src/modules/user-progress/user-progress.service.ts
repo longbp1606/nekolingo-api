@@ -13,9 +13,12 @@ import { CompleteLessonRequest } from "./dto/complete-lesson.request";
 import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
 import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
 import { Types } from "mongoose";
+import { UserStreakService } from "@modules/user-streak/user-streak.service";
 
 @Injectable()
 export class UserProgressService {
+	constructor(private readonly userStreakService: UserStreakService) {}
+
 	async completeLesson(dto: CompleteLessonRequest) {
 		const userId = new Types.ObjectId(dto.user_id);
 		const lessonId = new Types.ObjectId(dto.lesson_id);
@@ -55,7 +58,7 @@ export class UserProgressService {
 				weekly_xp: xp,
 			},
 			$set: {
-				current_lesson: nextLesson._id,
+				current_lesson: nextLesson?._id,
 				current_topic: topicId,
 				current_course: courseId,
 			},
@@ -123,7 +126,7 @@ export class UserProgressService {
 			}
 		}
 
-		return this.updateStreak(userId);
+		return this.userStreakService.updateStreak(userId);
 	}
 
 	async completeFullLesson(dto: CompleteFullLessonDto) {
@@ -168,51 +171,6 @@ export class UserProgressService {
 			user_id: dto.user_id,
 			lesson_id: dto.lesson_id,
 		});
-	}
-
-	async updateStreak(userId: Types.ObjectId) {
-		const user = await UserModel.findById(userId);
-		if (!user) throw new NotFoundException("User not found");
-
-		const userLessonProgress = await UserLessonProgressModel.find({
-			user_id: userId,
-		});
-		const lastProgress = userLessonProgress.sort(
-			(a, b) => +b.completed_at - +a.completed_at,
-		)[0];
-
-		const now = new Date();
-		const lastActive = user.last_active_date || user.createdAt || now;
-		const daysDiff = Math.floor((+now - +lastActive) / (1000 * 60 * 60 * 24));
-		const lastDiff = Math.floor(
-			(+now - +lastProgress.completed_at) / (1000 * 60 * 60 * 24),
-		);
-
-		if (daysDiff === 1) {
-			user.is_freeze = true;
-			user.freeze_count -= 1;
-		} else if (daysDiff === 2) {
-			user.is_freeze = true;
-			user.freeze_count -= 1;
-		} else if (daysDiff >= 3 && user.freeze_count === 0) {
-			user.streak_days = 0;
-			user.is_freeze = false;
-		}
-
-		if (lastDiff <= 1) {
-			user.streak_days += 1;
-			user.is_freeze = false;
-			user.freeze_count = 0;
-		}
-
-		user.last_active_date = now;
-		await user.save();
-
-		return {
-			streak_days: user.streak_days,
-			is_freeze: user.is_freeze,
-			freeze_count: user.freeze_count,
-		};
 	}
 
 	async getHeartRecoveryLesson(userId: Types.ObjectId) {
