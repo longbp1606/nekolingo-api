@@ -40,7 +40,7 @@ jobs:
     steps:
       - name: Pull Docker Image
         run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:lastest
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:latest
       - name: Run Docker Image via Docker Compose
         run: |
           cd ~/nekolingo
