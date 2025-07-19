@@ -12,7 +12,7 @@ on:
   #       type: string
 env:
   REPO_ID: nekolingo-api
-  APP_NAME: nekolingo-api
+  APP_NAME: neko-api
 jobs:
   build-and-push-docker:
     runs-on: ubuntu-latest
@@ -43,5 +43,5 @@ jobs:
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:lastest
       - name: Run Docker Image via Docker Compose
         run: |
-          cd ~/nekolingo-api
+          cd ~/nekolingo
           docker-compose up -d ${{ env.APP_NAME }}
