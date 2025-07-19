@@ -12,7 +12,7 @@ on:
   #       type: string
 env:
   REPO_ID: nekolingo-api
-  APP_NAME: neko-api
+  APP_NAME: neko_api
 jobs:
   build-and-push-docker:
     runs-on: ubuntu-latest
