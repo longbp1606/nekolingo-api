@@ -21,6 +21,9 @@ import { QuestModule } from "@modules/quest/quest.module";
 import { LeaderboardModule } from "@modules/leaderboard/leaderboard.module";
 import { TaskScheduler } from "./scheduler/task.scheduler";
 import { ClsModule } from "nestjs-cls";
+import { UploadModule } from "@modules/upload";
+import { CloudinaryModule } from "@providers/cloudinary";
+import { ImageModule } from "@modules/image";
 
 @Module({
 	imports: [
@@ -30,24 +33,27 @@ import { ClsModule } from "nestjs-cls";
 				mount: true,
 			},
 		}),
-		AuthModule,
-		UserModule,
-		TopicModule,
-		GrammarModule,
-		VocabularyModule,
-		VocabTopicModule,
-		LanguageModule,
-		CourseModule,
-		LessonModule,
-		ExerciseModule,
-		ArchivementModule,
-		UserArchivementModule,
-		UserProgressModule,
-		WalletModule,
 		ConfigModule.forRoot({ isGlobal: true }),
 		ScheduleModule.forRoot(),
+		AuthModule,
+		UserModule,
+		LanguageModule,
+		CourseModule,
+		TopicModule,
+		LessonModule,
+		ExerciseModule,
+		GrammarModule,
+		UserProgressModule,
+		VocabularyModule,
+		VocabTopicModule,
+		ArchivementModule,
+		UserArchivementModule,
+		WalletModule,
 		QuestModule,
 		LeaderboardModule,
+		UploadModule,
+		CloudinaryModule,
+		ImageModule,
 	],
 	controllers: [],
 	providers: [

@@ -6,9 +6,10 @@ import {
 	IsMongoId,
 	IsArray,
 	IsObject,
-	ValidateNested,
 	IsDefined,
+	ValidateNested,
 } from "class-validator";
+import { Type } from "class-transformer";
 
 export class CreateExerciseRequest {
 	@ApiProperty({
@@ -25,7 +26,7 @@ export class CreateExerciseRequest {
 			"reorder",
 			"image_select",
 			"multiple_choice",
-			"true_false",
+			"listening",
 		],
 	})
 	@IsEnum([
@@ -34,7 +35,7 @@ export class CreateExerciseRequest {
 		"reorder",
 		"image_select",
 		"multiple_choice",
-		"true_false",
+		"listening",
 	])
 	question_format: string;
 
@@ -46,10 +47,14 @@ export class CreateExerciseRequest {
 	@IsDefined()
 	correct_answer: any;
 
-	@ApiPropertyOptional({ type: [String] })
+	@ApiPropertyOptional({
+		description: "Mảng lựa chọn: dạng chuỗi hoặc object (string[] | object[])",
+		example: ["Option A", { value: "Option B", image: "https://..." }],
+		type: [Object],
+	})
 	@IsOptional()
 	@IsArray()
-	options?: string[];
+	options?: (string | Record<string, any>)[];
 
 	@ApiPropertyOptional()
 	@IsOptional()
@@ -75,7 +80,12 @@ export class CreateExerciseRequest {
 	@IsMongoId()
 	grammar?: string;
 
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({
+		description: "Dữ liệu bổ sung",
+		example: {
+			hint: "Gợi ý thêm cho học sinh",
+		},
+	})
 	@IsOptional()
 	@IsObject()
 	extra_data?: Record<string, any>;

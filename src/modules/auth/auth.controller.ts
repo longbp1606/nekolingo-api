@@ -5,6 +5,7 @@ import { BasicLoginRequest, BasicRegisterRequest, TokenResponse } from "./dto";
 import { AuthService } from "./auth.service";
 import { UserResponse } from "@modules/user/dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
+import { SetupRegisterRequest } from "./dto/setup-register.request";
 
 @Controller("auth")
 export class AuthController {
@@ -20,10 +21,17 @@ export class AuthController {
 
 	@Post("register")
 	@SkipAuth()
-	@SwaggerApiResponse(TokenResponse)
+	@SwaggerApiResponse(ApiResponseDto)
 	async register(@Body() dto: BasicRegisterRequest) {
 		await this.authService.basicRegister(dto);
 		return new ApiResponseDto(null, null, "Register successfully!");
+	}
+
+	@Post("setup-register")
+	@SkipAuth()
+	async setupRegister(@Body() dto: SetupRegisterRequest) {
+		await this.authService.setupRegister(dto);
+		return new ApiResponseDto(null, null, "Setup register successfully!");
 	}
 
 	@Get("profile")
@@ -31,7 +39,6 @@ export class AuthController {
 	@ApiBearerAuth()
 	async getProfile() {
 		const data = this.authService.getProfileCls();
-		console.log(data); // TODO: remove thi
 		return new ApiResponseDto(data, null, "Get profile successfully!");
 	}
 }
