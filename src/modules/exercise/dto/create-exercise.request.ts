@@ -48,13 +48,11 @@ export class CreateExerciseRequest {
 	correct_answer: any;
 
 	@ApiPropertyOptional({
-		description: "Mảng lựa chọn: dạng chuỗi hoặc object (string[] | object[])",
+		description: "Tùy chọn: chuỗi, object, mảng, bất kỳ",
 		example: ["Option A", { value: "Option B", image: "https://..." }],
-		type: [Object],
 	})
 	@IsOptional()
-	@IsArray()
-	options?: (string | Record<string, any>)[];
+	options?: any;
 
 	@ApiPropertyOptional()
 	@IsOptional()
