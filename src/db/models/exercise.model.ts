@@ -62,19 +62,10 @@ const ExerciseSchema = new Schema<IExercise, ExerciseModelType>(
 		question: { type: String, required: true },
 		correct_answer: { type: Schema.Types.Mixed, required: true },
 		options: {
-			type: [Schema.Types.Mixed],
-			validate: {
-				validator: function (arr: any[]) {
-					if (!Array.isArray(arr)) return false;
-					return arr.every(
-						(opt) =>
-							typeof opt === "string" ||
-							(typeof opt === "object" && opt !== null),
-					);
-				},
-				message: "Each option must be a string or an object.",
-			},
+			type: Schema.Types.Mixed,
+			default: [],
 		},
+
 		audio_url: { type: String },
 		image_url: { type: String },
 		lesson: {

@@ -12,19 +12,23 @@ import {
 } from "@nestjs/swagger";
 import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
 import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
+import { UserStreakService } from "@modules/user-streak/user-streak.service";
 
 @ApiTags("User Progress")
 @ApiBearerAuth()
 @Controller("user-progress")
 export class UserProgressController {
-	constructor(private readonly userProgressService: UserProgressService) {}
+	constructor(
+		private readonly userProgressService: UserProgressService,
+		private readonly userStreakService: UserStreakService,
+	) {}
 
 	@Post("update-streak")
 	@ApiOperation({ summary: "Cập nhật streak của người dùng" })
 	@ApiBody({ type: UpdateStreakRequest })
 	async updateStreak(@Body() dto: UpdateStreakRequest) {
 		const userObjectId = new Types.ObjectId(dto.user_id);
-		return this.userProgressService.updateStreak(userObjectId);
+		return this.userStreakService.updateStreak(userObjectId);
 	}
 
 	@Get("heart-recovery-lesson/:userId")
