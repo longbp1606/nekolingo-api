@@ -26,6 +26,13 @@ import { CreateQuestRequest } from "./dto/create-quest.request";
 export class QuestController {
 	constructor(private readonly questService: QuestService) {}
 
+	@Get()
+	@ApiOperation({ summary: "Lấy danh sách tất cả quest (admin)" })
+	@UseGuards(AuthGuard)
+	async getAll() {
+		return this.questService.getAllQuests();
+	}
+
 	@Post("daily")
 	@ApiOperation({ summary: "Tạo daily quest cho người dùng" })
 	@UseGuards(AuthGuard)
@@ -37,14 +44,6 @@ export class QuestController {
 	@UseGuards(AuthGuard)
 	async getDaily(@Req() req: any) {
 		return this.questService.getDailyQuestsForUser(req.user.id);
-	}
-
-	@Patch("daily/:id/complete")
-	@ApiOperation({ summary: "Đánh dấu daily quest là đã hoàn thành" })
-	@ApiParam({ name: "id", description: "ID của daily quest" })
-	@UseGuards(AuthGuard)
-	async complete(@Param("id") id: string, @Req() req: any) {
-		return this.questService.completeQuest(req.user.id, id);
 	}
 
 	@Post()

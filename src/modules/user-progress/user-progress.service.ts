@@ -14,10 +14,14 @@ import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
 import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
 import { Types } from "mongoose";
 import { UserStreakService } from "@modules/user-streak/user-streak.service";
+import { QuestService } from "@modules/quest/quest.service";
 
 @Injectable()
 export class UserProgressService {
-	constructor(private readonly userStreakService: UserStreakService) {}
+	constructor(
+		private readonly userStreakService: UserStreakService,
+		private readonly questService: QuestService,
+	) {}
 
 	async completeLesson(dto: CompleteLessonRequest) {
 		const userId = new Types.ObjectId(dto.user_id);
@@ -30,7 +34,6 @@ export class UserProgressService {
 				model: "Course",
 			},
 		});
-
 		if (!lesson) throw new NotFoundException("Lesson not found");
 
 		const xp = lesson.xp_reward || 10;
@@ -49,6 +52,7 @@ export class UserProgressService {
 		const topic = lesson.topic as any;
 		const courseId = topic?.course?._id || topic?.course;
 		const topicId = topic?._id || lesson.topic;
+
 		const lessons = await LessonModel.find({ topic: topicId });
 		const nextLesson = lessons.find((l) => l.order > lesson.order);
 
@@ -126,6 +130,8 @@ export class UserProgressService {
 			}
 		}
 
+		await this.questService.checkAndCompleteDailyQuests(userId);
+
 		return this.userStreakService.updateStreak(userId);
 	}
 
@@ -148,9 +154,7 @@ export class UserProgressService {
 
 			if (!isCorrect) {
 				await UserModel.findByIdAndUpdate(userId, {
-					$inc: {
-						hearts: -1,
-					},
+					$inc: { hearts: -1 },
 				});
 			}
 
@@ -270,11 +274,13 @@ export class UserProgressService {
 				completed_at: new Date(),
 				is_mistake: !isCorrect,
 				user_answer: dto.user_answer,
-				answer_time: dto.answer_time,
+				answer_time: dto.answer_time ?? 0,
 				score: isCorrect ? 1 : 0,
 			},
 			{ upsert: true },
 		);
+
+		await this.questService.checkAndCompleteDailyQuests(userId);
 
 		return {
 			correct: isCorrect,
