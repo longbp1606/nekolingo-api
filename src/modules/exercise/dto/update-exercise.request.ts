@@ -49,13 +49,11 @@ export class UpdateExerciseRequest extends PartialType(CreateExerciseRequest) {
 	readonly correct_answer?: any;
 
 	@ApiPropertyOptional({
-		description: "Danh sách lựa chọn dạng string hoặc object",
+		description: "Tùy chọn: chuỗi, object, mảng, bất kỳ",
 		example: ["Option A", { value: "Option B", image: "https://..." }],
-		type: [Object],
 	})
 	@IsOptional()
-	@IsArray()
-	readonly options?: (string | Record<string, any>)[];
+	options?: any;
 
 	@ApiPropertyOptional()
 	@IsOptional()
