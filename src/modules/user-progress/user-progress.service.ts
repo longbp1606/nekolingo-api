@@ -16,6 +16,7 @@ import { Types } from "mongoose";
 import { UserStreakService } from "@modules/user-streak/user-streak.service";
 import { QuestService } from "@modules/quest/quest.service";
 import { ExplainService } from "@modules/exercise/explain.service";
+import { PersonalizedLessonService } from "@modules/ai/personalized-lesson.service";
 
 @Injectable()
 export class UserProgressService {
@@ -23,6 +24,7 @@ export class UserProgressService {
 		private readonly userStreakService: UserStreakService,
 		private readonly questService: QuestService,
 		private readonly explainService: ExplainService,
+		private readonly personalizedLessonService: PersonalizedLessonService,
 	) {}
 
 	async completeLesson(dto: CompleteLessonRequest) {
@@ -305,5 +307,8 @@ export class UserProgressService {
 	}
 	async explainAnswer(userId: string, exerciseId: string) {
 		return this.explainService.explainAnswer(userId, exerciseId);
+	}
+	async generatePersonalizedLessonIfEligible(userId: string) {
+		return this.personalizedLessonService.autoGenerateIfNeeded(userId);
 	}
 }

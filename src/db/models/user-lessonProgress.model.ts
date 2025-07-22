@@ -6,6 +6,7 @@ export interface IUserLessonProgress {
 	completed_at?: Date;
 	score?: number;
 	xp_earned?: number;
+	used_in_personalized?: boolean;
 }
 
 export type UserLessonProgressDocument = HydratedDocument<IUserLessonProgress>;
@@ -17,6 +18,7 @@ const UserLessonProgressSchema = new Schema<IUserLessonProgress>(
 		completed_at: { type: Date },
 		score: { type: Number, default: 0 },
 		xp_earned: { type: Number, default: 0 },
+		used_in_personalized: { type: Boolean, default: false },
 	},
 	{ timestamps: true },
 );

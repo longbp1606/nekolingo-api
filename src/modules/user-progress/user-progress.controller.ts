@@ -16,6 +16,7 @@ import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
 import { UserStreakService } from "@modules/user-streak/user-streak.service";
 import { ExplainAnswerResponseDto } from "./dto/explain-answer.response";
 import { ExplainAnswerRequestDto } from "./dto/explain-answer.request";
+import { LessonModel, UserLessonProgressModel } from "@db/models";
 
 @ApiTags("User Progress")
 @ApiBearerAuth()
@@ -78,5 +79,31 @@ export class UserProgressController {
 		@Body() dto: ExplainAnswerRequestDto,
 	): Promise<ExplainAnswerResponseDto> {
 		return this.userProgressService.explainAnswer(dto.user_id, dto.exercise_id);
+	}
+
+	@Post("generate-personalized-lesson")
+	@ApiOperation({
+		summary:
+			"Tạo bài học cá nhân hóa nếu đủ điều kiện (3 bài + có sai) (Test thủ công)",
+	})
+	@ApiBody({ schema: { example: { user_id: "..." } } })
+	async generatePersonalizedLessonIfEligible(@Body("user_id") userId: string) {
+		return this.userProgressService.generatePersonalizedLessonIfEligible(
+			userId,
+		);
+	}
+
+	@Get("personalized-lessons/:userId")
+	@ApiOperation({
+		summary: "Lấy danh sách lesson cá nhân hoá đã được tạo từ lỗi sai (AI tạo)",
+	})
+	async getPersonalizedLessons(@Param("userId") userId: string) {
+		const lessons = await LessonModel.find({
+			mode: "personalized",
+			"extra_data.generated_from": "ai_bulk_mistakes",
+			"extra_data.user_id": userId,
+		});
+
+		return lessons;
 	}
 }

@@ -11,7 +11,7 @@ export class GeminiService {
 		this.GEMINI_API_KEY = this.configService.get<string>("GEMINI_API_KEY");
 
 		const model = "gemini-1.5-flash";
-		this.GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.GEMINI_API_KEY}`;
+		this.GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.GEMINI_API_KEY}`;
 	}
 
 	async generateExplanation(prompt: string): Promise<string> {
