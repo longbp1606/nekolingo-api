@@ -15,12 +15,14 @@ import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
 import { Types } from "mongoose";
 import { UserStreakService } from "@modules/user-streak/user-streak.service";
 import { QuestService } from "@modules/quest/quest.service";
+import { ExplainService } from "@modules/exercise/explain.service";
 
 @Injectable()
 export class UserProgressService {
 	constructor(
 		private readonly userStreakService: UserStreakService,
 		private readonly questService: QuestService,
+		private readonly explainService: ExplainService,
 	) {}
 
 	async completeLesson(dto: CompleteLessonRequest) {
@@ -300,5 +302,8 @@ export class UserProgressService {
 			return JSON.stringify(correct) === JSON.stringify(userAnswer);
 		}
 		return correct === userAnswer;
+	}
+	async explainAnswer(userId: string, exerciseId: string) {
+		return this.explainService.explainAnswer(userId, exerciseId);
 	}
 }

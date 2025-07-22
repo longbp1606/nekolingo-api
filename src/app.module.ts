@@ -25,6 +25,7 @@ import { UploadModule } from "@modules/upload";
 import { CloudinaryModule } from "@providers/cloudinary";
 import { ImageModule } from "@modules/image";
 import { UserStreakModule } from "@modules/user-streak/user-streak.module";
+import { AiModule } from "@modules/ai/ai.module";
 
 @Module({
 	imports: [
@@ -56,6 +57,7 @@ import { UserStreakModule } from "@modules/user-streak/user-streak.module";
 		CloudinaryModule,
 		ImageModule,
 		UserStreakModule,
+		AiModule,
 	],
 	controllers: [],
 	providers: [

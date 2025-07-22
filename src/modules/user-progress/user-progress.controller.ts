@@ -8,11 +8,14 @@ import {
 	ApiBody,
 	ApiOperation,
 	ApiParam,
+	ApiResponse,
 	ApiTags,
 } from "@nestjs/swagger";
 import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
 import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
 import { UserStreakService } from "@modules/user-streak/user-streak.service";
+import { ExplainAnswerResponseDto } from "./dto/explain-answer.response";
+import { ExplainAnswerRequestDto } from "./dto/explain-answer.request";
 
 @ApiTags("User Progress")
 @ApiBearerAuth()
@@ -64,5 +67,16 @@ export class UserProgressController {
 	@ApiBody({ type: CompleteFullLessonDto })
 	async completeFullLesson(@Body() dto: CompleteFullLessonDto) {
 		return this.userProgressService.completeFullLesson(dto);
+	}
+
+	@Post("explain-answer")
+	@ApiOperation({
+		summary: "Giải thích vì sao người học đúng/sai một câu bài tập",
+	})
+	@ApiResponse({ type: ExplainAnswerResponseDto })
+	async explainAnswer(
+		@Body() dto: ExplainAnswerRequestDto,
+	): Promise<ExplainAnswerResponseDto> {
+		return this.userProgressService.explainAnswer(dto.user_id, dto.exercise_id);
 	}
 }
