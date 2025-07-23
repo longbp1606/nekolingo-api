@@ -6,11 +6,13 @@ import {
 	UserCourseProgressModel,
 	UserLessonProgressModel,
 	UserTopicProgressModel,
+	UserStreakProgressModel,
 } from "@db/models";
 import { ApiValidationError } from "@errors";
 import * as bcrypt from "bcrypt";
 import { UpdateUserRequest } from "./dto/update-user.request";
 import { Types } from "mongoose";
+import { startOfWeek, addDays } from "date-fns";
 
 @Injectable()
 export class UserService {
@@ -111,6 +113,26 @@ export class UserService {
 				title: (c.course_id as any).title,
 			}));
 
+		const startOfThisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
+		const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+		const streakLogs = await UserStreakProgressModel.find({
+			userId: user._id,
+			date: { $gte: startOfThisWeek },
+		});
+
+		const streak_list = daysOfWeek.map((day, index) => {
+			const date = addDays(startOfThisWeek, index);
+			const log = streakLogs.find(
+				(entry) => entry.date.toDateString() === date.toDateString(),
+			);
+			return {
+				day,
+				isStreak: !!log?.isStreak,
+				isFreeze: !!log?.isFreeze,
+			};
+		});
+
 		return {
 			user,
 			current_course: currentCourse,
@@ -119,6 +141,7 @@ export class UserService {
 			lesson_status: lessonStatus,
 			completed_topics: completedTopics,
 			completed_courses: completedCourses,
+			streak_list,
 		};
 	}
 

@@ -24,6 +24,9 @@ import { ClsModule } from "nestjs-cls";
 import { UploadModule } from "@modules/upload";
 import { CloudinaryModule } from "@providers/cloudinary";
 import { ImageModule } from "@modules/image";
+import { UserStreakModule } from "@modules/user-streak/user-streak.module";
+import { AiModule } from "@modules/ai/ai.module";
+import { ShopModule } from "@modules/shop/shop.module";
 
 @Module({
 	imports: [
@@ -54,6 +57,9 @@ import { ImageModule } from "@modules/image";
 		UploadModule,
 		CloudinaryModule,
 		ImageModule,
+		UserStreakModule,
+		AiModule,
+		ShopModule,
 	],
 	controllers: [],
 	providers: [

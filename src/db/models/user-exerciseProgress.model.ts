@@ -5,6 +5,9 @@ export interface IUserExerciseProgress {
 	exercise_id: Types.ObjectId;
 	completed_at?: Date;
 	is_mistake?: boolean;
+	answer_time?: number;
+	user_answer?: string;
+	score?: number; // 1 nếu đúng, 0 nếu sai
 }
 
 export type UserExerciseProgressDocument =
@@ -20,6 +23,9 @@ const UserExerciseProgressSchema = new Schema<IUserExerciseProgress>(
 		},
 		completed_at: { type: Date },
 		is_mistake: { type: Boolean, default: false },
+		answer_time: { type: Number },
+		user_answer: { type: String },
+		score: { type: Number, default: 0 },
 	},
 	{ timestamps: true },
 );

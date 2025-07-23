@@ -13,9 +13,20 @@ import { CompleteLessonRequest } from "./dto/complete-lesson.request";
 import { SubmitExerciseDto } from "./dto/submit-exercise.dto";
 import { CompleteFullLessonDto } from "./dto/complete-full-lesson.dto";
 import { Types } from "mongoose";
+import { UserStreakService } from "@modules/user-streak/user-streak.service";
+import { QuestService } from "@modules/quest/quest.service";
+import { ExplainService } from "@modules/exercise/explain.service";
+import { PersonalizedLessonService } from "@modules/ai/personalized-lesson.service";
 
 @Injectable()
 export class UserProgressService {
+	constructor(
+		private readonly userStreakService: UserStreakService,
+		private readonly questService: QuestService,
+		private readonly explainService: ExplainService,
+		private readonly personalizedLessonService: PersonalizedLessonService,
+	) {}
+
 	async completeLesson(dto: CompleteLessonRequest) {
 		const userId = new Types.ObjectId(dto.user_id);
 		const lessonId = new Types.ObjectId(dto.lesson_id);
@@ -27,7 +38,6 @@ export class UserProgressService {
 				model: "Course",
 			},
 		});
-
 		if (!lesson) throw new NotFoundException("Lesson not found");
 
 		const xp = lesson.xp_reward || 10;
@@ -46,6 +56,7 @@ export class UserProgressService {
 		const topic = lesson.topic as any;
 		const courseId = topic?.course?._id || topic?.course;
 		const topicId = topic?._id || lesson.topic;
+
 		const lessons = await LessonModel.find({ topic: topicId });
 		const nextLesson = lessons.find((l) => l.order > lesson.order);
 
@@ -55,7 +66,7 @@ export class UserProgressService {
 				weekly_xp: xp,
 			},
 			$set: {
-				current_lesson: nextLesson._id,
+				current_lesson: nextLesson?._id,
 				current_topic: topicId,
 				current_course: courseId,
 			},
@@ -123,7 +134,9 @@ export class UserProgressService {
 			}
 		}
 
-		return this.updateStreak(userId);
+		await this.questService.checkAndCompleteDailyQuests(userId);
+
+		return this.userStreakService.updateStreak(userId);
 	}
 
 	async completeFullLesson(dto: CompleteFullLessonDto) {
@@ -132,6 +145,8 @@ export class UserProgressService {
 
 		const lesson = await LessonModel.findById(lessonId);
 		if (!lesson) throw new NotFoundException("Lesson not found");
+
+		let correctCount = 0;
 
 		for (const ex of dto.exercises) {
 			const exerciseId = new Types.ObjectId(ex.exercise_id);
@@ -143,11 +158,11 @@ export class UserProgressService {
 				ex.user_answer,
 			);
 
-			if (!isCorrect) {
+			if (isCorrect) {
+				correctCount++;
+			} else {
 				await UserModel.findByIdAndUpdate(userId, {
-					$inc: {
-						hearts: -1,
-					},
+					$inc: { hearts: -1 },
 				});
 			}
 
@@ -164,55 +179,28 @@ export class UserProgressService {
 			);
 		}
 
+		const total = dto.exercises.length;
+		const scorePercent =
+			total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+		const xp = lesson.xp_reward || 10;
+
+		await UserLessonProgressModel.updateOne(
+			{ user_id: userId, lesson_id: lessonId },
+			{
+				$set: {
+					completed_at: new Date(),
+					xp_earned: xp,
+					score: scorePercent,
+				},
+			},
+			{ upsert: true },
+		);
+
 		return this.completeLesson({
 			user_id: dto.user_id,
 			lesson_id: dto.lesson_id,
 		});
-	}
-
-	async updateStreak(userId: Types.ObjectId) {
-		const user = await UserModel.findById(userId);
-		if (!user) throw new NotFoundException("User not found");
-
-		const userLessonProgress = await UserLessonProgressModel.find({
-			user_id: userId,
-		});
-		const lastProgress = userLessonProgress.sort(
-			(a, b) => +b.completed_at - +a.completed_at,
-		)[0];
-
-		const now = new Date();
-		const lastActive = user.last_active_date || user.createdAt || now;
-		const daysDiff = Math.floor((+now - +lastActive) / (1000 * 60 * 60 * 24));
-		const lastDiff = Math.floor(
-			(+now - +lastProgress.completed_at) / (1000 * 60 * 60 * 24),
-		);
-
-		if (daysDiff === 1) {
-			user.is_freeze = true;
-			user.freeze_count -= 1;
-		} else if (daysDiff === 2) {
-			user.is_freeze = true;
-			user.freeze_count -= 1;
-		} else if (daysDiff >= 3 && user.freeze_count === 0) {
-			user.streak_days = 0;
-			user.is_freeze = false;
-		}
-
-		if (lastDiff <= 1) {
-			user.streak_days += 1;
-			user.is_freeze = false;
-			user.freeze_count = 0;
-		}
-
-		user.last_active_date = now;
-		await user.save();
-
-		return {
-			streak_days: user.streak_days,
-			is_freeze: user.is_freeze,
-			freeze_count: user.freeze_count,
-		};
 	}
 
 	async getHeartRecoveryLesson(userId: Types.ObjectId) {
@@ -312,11 +300,13 @@ export class UserProgressService {
 				completed_at: new Date(),
 				is_mistake: !isCorrect,
 				user_answer: dto.user_answer,
-				answer_time: dto.answer_time,
+				answer_time: dto.answer_time ?? 0,
 				score: isCorrect ? 1 : 0,
 			},
 			{ upsert: true },
 		);
+
+		await this.questService.checkAndCompleteDailyQuests(userId);
 
 		return {
 			correct: isCorrect,
@@ -336,5 +326,11 @@ export class UserProgressService {
 			return JSON.stringify(correct) === JSON.stringify(userAnswer);
 		}
 		return correct === userAnswer;
+	}
+	async explainAnswer(userId: string, exerciseId: string) {
+		return this.explainService.explainAnswer(userId, exerciseId);
+	}
+	async generatePersonalizedLessonIfEligible(userId: string) {
+		return this.personalizedLessonService.autoGenerateIfNeeded(userId);
 	}
 }

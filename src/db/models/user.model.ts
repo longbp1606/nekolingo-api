@@ -12,6 +12,7 @@ export interface IUser {
 	weekly_xp: number;
 	hearts: number;
 	streak_days: number;
+	backup_streak_days?: number;
 	is_freeze: boolean;
 	last_active_date?: Date;
 	freeze_count: number;
@@ -20,6 +21,11 @@ export interface IUser {
 	is_premiere: boolean;
 	balance: number;
 	is_active: boolean;
+	double_or_nothing?: {
+		start_date: Date;
+		is_active: boolean;
+		is_completed: boolean;
+	};
 	current_course?: Types.ObjectId;
 	current_topic?: Types.ObjectId;
 	current_lesson?: Types.ObjectId;
@@ -42,6 +48,7 @@ const UserSchema = new Schema<IUser, UserModelType>(
 		weekly_xp: { type: Number, default: 0 },
 		hearts: { type: Number, default: 5 },
 		streak_days: { type: Number, default: 0 },
+		backup_streak_days: { type: Number, default: 0 },
 		is_freeze: { type: Boolean, default: false },
 		last_active_date: { type: Date },
 		freeze_count: { type: Number, default: 0 },
@@ -50,6 +57,15 @@ const UserSchema = new Schema<IUser, UserModelType>(
 		is_premiere: { type: Boolean, default: false },
 		balance: { type: Number, default: 0 },
 		is_active: { type: Boolean, default: true },
+		double_or_nothing: {
+			type: {
+				start_date: { type: Date, required: true },
+				is_active: { type: Boolean, default: true },
+				is_completed: { type: Boolean, default: false },
+			},
+			default: null,
+		},
+
 		current_course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
 		current_topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
 		current_lesson: { type: mongoose.Schema.Types.ObjectId, ref: "Lesson" },

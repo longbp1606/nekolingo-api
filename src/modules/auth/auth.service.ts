@@ -4,7 +4,13 @@ import * as jwt from "jsonwebtoken";
 import { Env, NekolingoClsStore } from "@utils";
 import { ClsService } from "nestjs-cls";
 import { BasicLoginRequest, BasicRegisterRequest } from "./dto";
-import { CourseModel, LessonModel, TopicModel, UserModel } from "@db/models";
+import {
+	CourseModel,
+	LanguageModel,
+	LessonModel,
+	TopicModel,
+	UserModel,
+} from "@db/models";
 import { EmailNotFoundError, WrongPasswordError } from "./errors";
 import * as bcrypt from "bcrypt";
 import { ExistedEmailError } from "./errors/existed-email.error";
@@ -63,9 +69,17 @@ export class AuthService {
 		const existedEmail = await UserModel.findOne({ email: dto.email });
 		if (existedEmail) throw new ExistedEmailError();
 		const encryptedPassword = bcrypt.hashSync(dto.password, 10);
+
+		const languageFrom = await LanguageModel.findOne({
+			code: dto.language_from,
+		});
+
+		const languageTo = await LanguageModel.findOne({
+			code: dto.language_to,
+		});
 		const currentCourse = await CourseModel.findOne({
-			language_from: dto.language_from,
-			language_to: dto.language_to,
+			language_from: languageFrom._id,
+			language_to: languageTo._id,
 		});
 		const currentTopic = await TopicModel.find({
 			course: currentCourse._id,
@@ -80,8 +94,8 @@ export class AuthService {
 			role: 0,
 			username: dto.username ? dto.username : dto.email.split("@")[0],
 			current_level: dto.current_level,
-			language_from: dto.language_from,
-			language_to: dto.language_to,
+			language_from: languageFrom._id,
+			language_to: languageTo._id,
 			is_active: true,
 			current_course: currentCourse._id,
 			current_topic: currentTopic[0]._id,
