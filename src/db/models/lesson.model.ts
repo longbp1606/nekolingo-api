@@ -10,6 +10,7 @@ export interface ILesson {
 	mode: "normal" | "personalized" | "mixed" | "heart_recovery";
 
 	description?: string;
+	extra_data?: Record<string, any>;
 }
 
 export type LessonDocument = HydratedDocument<ILesson>;
@@ -24,6 +25,7 @@ const ALLOWED_TYPES = [
 ];
 
 const ALLOWED_MODES = ["normal", "personalized", "mixed", "heart_recovery"];
+const { Mixed } = Schema.Types;
 
 const LessonSchema = new Schema<ILesson, LessonModelType>(
 	{
@@ -59,6 +61,7 @@ const LessonSchema = new Schema<ILesson, LessonModelType>(
 		},
 
 		description: { type: String, required: false },
+		extra_data: { type: Mixed, required: false },
 	},
 	{ timestamps: true },
 );
