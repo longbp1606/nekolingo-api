@@ -11,7 +11,7 @@ export class WalletController {
 	constructor(private readonly walletService: WalletService) {}
 
 	@Post("vnpay/deposit")
-	@ApiOperation({ summary: "Tạo yêu cầu nạp tiền VNPAY" })
+	@ApiOperation({ summary: "Tạo yêu cầu nạp tiền VNPAY (trả về URL)" })
 	@ApiBody({ type: CreateDepositRequest })
 	async deposit(
 		@Req() req: Request & { user?: { id: string } },
@@ -26,25 +26,44 @@ export class WalletController {
 			body.amount,
 			req.ip,
 		);
-		return res.redirect(paymentUrl);
+
+		return res.json({ url: paymentUrl });
 	}
 
 	@Get("vnpay/return")
-	@ApiOperation({ summary: "Callback từ VNPAY sau khi nạp tiền" })
+	@ApiOperation({ summary: "Xử lý callback từ VNPAY sau khi thanh toán" })
 	async handleReturn(
 		@Query() query: Record<string, string>,
 		@Res() res: Response,
 	) {
-		console.log("📥 Dữ liệu trả về từ VNPAY:", query); // ✅ Log dữ liệu trả về
-
 		const result = await this.walletService.handleReturn(query);
 
-		console.log("✅ Kết quả xử lý:", result); // ✅ Log kết quả xử lý
+		if (result.success) {
+			return res.json({
+				success: true,
+				message: `Nạp thành công`,
+				amountVND: result.amountVND,
+				gemsAdded: result.gemsAdded,
+			});
+		} else {
+			return res.status(400).json({
+				success: false,
+				message: result.message || "Giao dịch không hợp lệ",
+			});
+		}
+	}
 
-		return res.send(
-			result.success
-				? `Nạp tiền thành công. Số tiền: ${result.amount} VND`
-				: `Giao dịch không hợp lệ: ${result.message || "Unknown error"}`,
-		);
+	@Get("transactions")
+	@ApiOperation({ summary: "Lấy lịch sử giao dịch của người dùng" })
+	async getTransactionHistory(
+		@Req() req: Request & { user?: { id: string } },
+		@Res() res: Response,
+	) {
+		const userId = req.user?.id;
+		if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+		const transactions = await this.walletService.getUserTransactions(userId);
+
+		return res.json({ success: true, data: transactions });
 	}
 }

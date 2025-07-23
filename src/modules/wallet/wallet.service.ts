@@ -3,6 +3,10 @@ import { VnpayService } from "nestjs-vnpay";
 import { ConfigService } from "@nestjs/config";
 import { ProductCode, VnpLocale } from "vnpay";
 import { UserModel } from "src/db/models/user.model";
+import {
+	TransactionModel,
+	TransactionStatus,
+} from "src/db/models/transaction.model";
 
 @Injectable()
 export class WalletService {
@@ -17,7 +21,7 @@ export class WalletService {
 		return this.vnpayService.buildPaymentUrl({
 			vnp_Amount: amount * 100,
 			vnp_TxnRef: txnRef,
-			vnp_OrderInfo: "Nap tien vao tai khoan",
+			vnp_OrderInfo: "Nạp tiền vào tài khoản",
 			vnp_IpAddr: ip || "127.0.0.1",
 			vnp_OrderType: ProductCode.Other,
 			vnp_Locale: VnpLocale.VN,
@@ -45,30 +49,62 @@ export class WalletService {
 
 		const result = await this.vnpayService.verifyReturnUrl(query as any);
 
-		if (!result.isVerified || !result.isSuccess) {
-			return {
-				success: false,
-				message: "Xác minh thất bại hoặc giao dịch lỗi",
-			};
-		}
-
 		const txnRef = query.vnp_TxnRef;
 		const [_, userId] = txnRef.split("_");
 		const rawAmount = parseInt(query.vnp_Amount || "0", 10);
 		const amount = rawAmount / 100;
+		const gemAmount = this.convertVndToGem(amount);
 
-		if (!userId || isNaN(amount)) {
-			return { success: false, message: "Dữ liệu không hợp lệ" };
+		if (!result.isVerified || !result.isSuccess || !userId || isNaN(amount)) {
+			await TransactionModel.create({
+				user: userId,
+				vnd_amount: amount || 0,
+				gem_amount: 0,
+				status: TransactionStatus.FAILED,
+				transaction_code: txnRef,
+				message: "Xác minh thất bại hoặc dữ liệu không hợp lệ",
+			});
+
+			return {
+				success: false,
+				message: "Xác minh thất bại hoặc dữ liệu không hợp lệ",
+			};
 		}
 
 		await UserModel.findByIdAndUpdate(userId, {
-			$inc: { balance: amount },
+			$inc: { balance: gemAmount },
+		});
+
+		await TransactionModel.create({
+			user: userId,
+			vnd_amount: amount,
+			gem_amount: gemAmount,
+			status: TransactionStatus.SUCCESS,
+			transaction_code: txnRef,
+			message: "Nạp gem thành công",
 		});
 
 		return {
 			success: true,
 			userId,
-			amount,
+			amountVND: amount,
+			gemsAdded: gemAmount,
+			message: `Bạn đã nạp ${amount}₫ và nhận được ${gemAmount} gem.`,
 		};
+	}
+
+	private convertVndToGem(amount: number): number {
+		if (amount >= 200_000) return 2800;
+		if (amount >= 100_000) return 1300;
+		if (amount >= 50_000) return 600;
+		return Math.floor((amount * 10) / 1000); // 1.000₫ = 10 gem
+	}
+
+	async getUserTransactions(userId: string) {
+		return await TransactionModel.find({ user: userId })
+			.sort({ createdAt: -1 })
+			.select(
+				"vnd_amount gem_amount status transaction_code createdAt message",
+			);
 	}
 }
