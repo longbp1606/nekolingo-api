@@ -1,4 +1,3 @@
-// src/modules/shop/shop.module.ts
 import { Module } from "@nestjs/common";
 import { ShopController } from "./shop.controller";
 import { ShopService } from "./shop.service";

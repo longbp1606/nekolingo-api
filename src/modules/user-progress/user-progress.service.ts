@@ -146,6 +146,8 @@ export class UserProgressService {
 		const lesson = await LessonModel.findById(lessonId);
 		if (!lesson) throw new NotFoundException("Lesson not found");
 
+		let correctCount = 0;
+
 		for (const ex of dto.exercises) {
 			const exerciseId = new Types.ObjectId(ex.exercise_id);
 			const exercise = await ExerciseModel.findById(exerciseId);
@@ -156,7 +158,9 @@ export class UserProgressService {
 				ex.user_answer,
 			);
 
-			if (!isCorrect) {
+			if (isCorrect) {
+				correctCount++;
+			} else {
 				await UserModel.findByIdAndUpdate(userId, {
 					$inc: { hearts: -1 },
 				});
@@ -174,6 +178,24 @@ export class UserProgressService {
 				{ upsert: true },
 			);
 		}
+
+		const total = dto.exercises.length;
+		const scorePercent =
+			total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+		const xp = lesson.xp_reward || 10;
+
+		await UserLessonProgressModel.updateOne(
+			{ user_id: userId, lesson_id: lessonId },
+			{
+				$set: {
+					completed_at: new Date(),
+					xp_earned: xp,
+					score: scorePercent,
+				},
+			},
+			{ upsert: true },
+		);
 
 		return this.completeLesson({
 			user_id: dto.user_id,
