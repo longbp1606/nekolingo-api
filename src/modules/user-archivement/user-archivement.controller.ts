@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { UserArchivementService } from "./user-archivement.service";
 import { ApiResponseDto, SwaggerApiResponse } from "@utils";
 import { CreateUserArchivementRequest } from "./dto";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("User Archivement")
+@ApiBearerAuth()
 @Controller("user-archivement")
 export class UserArchivementController {
 	constructor(

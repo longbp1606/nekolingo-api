@@ -5,6 +5,7 @@ import { LeaderboardService } from "@modules/leaderboard/leaderboard.service";
 import { UserStreakService } from "@modules/user-streak/user-streak.service";
 import { UserModel } from "@db/models";
 import { PersonalizedLessonService } from "@modules/ai/personalized-lesson.service";
+import { ArchivementCheckerService } from "@modules/archivement/archivement-checker.service";
 
 @Injectable()
 export class TaskScheduler {
@@ -13,6 +14,7 @@ export class TaskScheduler {
 		private readonly leaderboardService: LeaderboardService,
 		private readonly userStreakService: UserStreakService,
 		private readonly personalizedLessonService: PersonalizedLessonService,
+		private readonly archivementCheckerService: ArchivementCheckerService,
 	) {}
 
 	@Cron("0 0 * * *") // mỗi ngày lúc 00:00
@@ -137,5 +139,21 @@ export class TaskScheduler {
 		console.log(
 			`[DoubleOrNothing] Kết thúc: +${successCount} thành công, -${failedCount} thất bại`,
 		);
+	}
+
+	@Cron("15 0 * * *") // Mỗi ngày lúc 00:15
+	async checkArchivementUnlocks() {
+		const users = await UserModel.find({}, "_id");
+
+		const results = await Promise.allSettled(
+			users.map((user) =>
+				this.archivementCheckerService.checkAndUnlockArchivements(user._id),
+			),
+		);
+
+		const success = results.filter((r) => r.status === "fulfilled").length;
+		const failed = results.filter((r) => r.status === "rejected").length;
+
+		console.log(`[Archivement] Checked: ${success} users, Failed: ${failed}`);
 	}
 }

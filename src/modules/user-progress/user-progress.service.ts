@@ -17,6 +17,7 @@ import { UserStreakService } from "@modules/user-streak/user-streak.service";
 import { QuestService } from "@modules/quest/quest.service";
 import { ExplainService } from "@modules/exercise/explain.service";
 import { PersonalizedLessonService } from "@modules/ai/personalized-lesson.service";
+import { ArchivementCheckerService } from "@modules/archivement/archivement-checker.service";
 
 @Injectable()
 export class UserProgressService {
@@ -25,6 +26,7 @@ export class UserProgressService {
 		private readonly questService: QuestService,
 		private readonly explainService: ExplainService,
 		private readonly personalizedLessonService: PersonalizedLessonService,
+		private readonly archivementCheckerService: ArchivementCheckerService,
 	) {}
 
 	async completeLesson(dto: CompleteLessonRequest) {
@@ -135,7 +137,7 @@ export class UserProgressService {
 		}
 
 		await this.questService.checkAndCompleteDailyQuests(userId);
-
+		await this.archivementCheckerService.checkAndUnlockArchivements(userId);
 		return this.userStreakService.updateStreak(userId);
 	}
 
