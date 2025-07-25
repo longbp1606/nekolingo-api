@@ -198,7 +198,7 @@ export class UserProgressService {
 			},
 			{ upsert: true },
 		);
-
+		await this.userStreakService.updateStreak(userId);
 		return this.completeLesson({
 			user_id: dto.user_id,
 			lesson_id: dto.lesson_id,
