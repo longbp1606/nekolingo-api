@@ -323,14 +323,44 @@ export class UserProgressService {
 			return (
 				Array.isArray(userAnswer) &&
 				correct.length === userAnswer.length &&
-				correct.every((val, idx) => val === userAnswer[idx])
+				correct.every((val, idx) =>
+					this.checkAnswerCorrect(val, userAnswer[idx]),
+				)
 			);
 		}
-		if (typeof correct === "object") {
+
+		if (typeof correct === "object" && correct !== null) {
+			if (
+				"userAnswer" in Object(userAnswer) &&
+				typeof userAnswer.answer === "string" &&
+				typeof correct === "string"
+			) {
+				return (
+					userAnswer.answer.trim().toLowerCase() ===
+					correct.trim().toLowerCase()
+				);
+			}
+
 			return JSON.stringify(correct) === JSON.stringify(userAnswer);
 		}
-		return correct === userAnswer;
+
+		if (
+			typeof correct === "string" &&
+			typeof userAnswer === "object" &&
+			userAnswer?.answer
+		) {
+			return (
+				String(userAnswer.answer).trim().toLowerCase() ===
+				correct.trim().toLowerCase()
+			);
+		}
+
+		return (
+			String(correct).trim().toLowerCase() ===
+			String(userAnswer).trim().toLowerCase()
+		);
 	}
+
 	async explainAnswer(userId: string, exerciseId: string) {
 		return this.explainService.explainAnswer(userId, exerciseId);
 	}

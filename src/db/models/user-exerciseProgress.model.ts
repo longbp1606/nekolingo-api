@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types, HydratedDocument, Model } from "mongoose";
+import mongoose, { Schema, Types, HydratedDocument } from "mongoose";
 
 export interface IUserExerciseProgress {
 	user_id: Types.ObjectId;
@@ -6,7 +6,7 @@ export interface IUserExerciseProgress {
 	completed_at?: Date;
 	is_mistake?: boolean;
 	answer_time?: number;
-	user_answer?: string;
+	user_answer?: string | string[] | number | object | object[];
 	score?: number; // 1 nếu đúng, 0 nếu sai
 }
 
@@ -24,7 +24,7 @@ const UserExerciseProgressSchema = new Schema<IUserExerciseProgress>(
 		completed_at: { type: Date },
 		is_mistake: { type: Boolean, default: false },
 		answer_time: { type: Number },
-		user_answer: { type: String },
+		user_answer: { type: Schema.Types.Mixed },
 		score: { type: Number, default: 0 },
 	},
 	{ timestamps: true },
