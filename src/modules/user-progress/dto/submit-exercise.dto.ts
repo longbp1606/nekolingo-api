@@ -1,5 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsMongoId, IsDefined } from "class-validator";
+import {
+	IsMongoId,
+	IsDefined,
+	IsNumber,
+	Min,
+	IsOptional,
+} from "class-validator";
 
 export class SubmitExerciseDto {
 	@ApiProperty()
@@ -15,5 +21,8 @@ export class SubmitExerciseDto {
 	user_answer: any;
 
 	@ApiProperty()
-	answer_time: number;
+	@IsOptional()
+	@IsNumber()
+	@Min(0)
+	answer_time?: number;
 }
