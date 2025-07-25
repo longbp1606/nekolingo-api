@@ -138,7 +138,7 @@ export class UserProgressService {
 
 		await this.questService.checkAndCompleteDailyQuests(userId);
 		await this.archivementCheckerService.checkAndUnlockArchivements(userId);
-		return this.userStreakService.updateStreak(userId);
+		return;
 	}
 
 	async completeFullLesson(dto: CompleteFullLessonDto) {
@@ -309,7 +309,9 @@ export class UserProgressService {
 		);
 
 		await this.questService.checkAndCompleteDailyQuests(userId);
-
+		if (isCorrect) {
+			await this.userStreakService.updateStreak(userId);
+		}
 		return {
 			correct: isCorrect,
 			is_mistake: !isCorrect,
