@@ -4,6 +4,12 @@ import { Types } from "mongoose";
 
 @Injectable()
 export class UserStreakService {
+	async getUserById(userId: Types.ObjectId) {
+		const user = await UserModel.findById(userId);
+		if (!user) throw new NotFoundException("User not found");
+		return user;
+	}
+
 	async updateStreak(userId: Types.ObjectId, isActiveToday = true) {
 		const user = await UserModel.findById(userId);
 		if (!user) throw new NotFoundException("User not found");
@@ -102,5 +108,57 @@ export class UserStreakService {
 			is_freeze: user.is_freeze,
 			freeze_count: user.freeze_count,
 		};
+	}
+
+	async getWeeklyStreakStatus(userId: Types.ObjectId) {
+		const user = await UserModel.findById(userId);
+		if (!user) throw new NotFoundException("User not found");
+
+		const now = new Date();
+		const todayDay = now.getDay();
+		const diffToMonday = todayDay === 0 ? -6 : 1 - todayDay;
+
+		const monday = new Date(now);
+		monday.setDate(now.getDate() + diffToMonday);
+		monday.setHours(0, 0, 0, 0);
+
+		const weekDates = Array.from({ length: 7 }, (_, i) => {
+			const date = new Date(monday);
+			date.setDate(monday.getDate() + i);
+			return date;
+		});
+
+		const logs = await UserStreakProgressModel.find({
+			userId,
+			date: { $gte: weekDates[0], $lte: weekDates[6] },
+		});
+
+		const dayNames = [
+			"Chủ nhật",
+			"Thứ 2",
+			"Thứ 3",
+			"Thứ 4",
+			"Thứ 5",
+			"Thứ 6",
+			"Thứ 7",
+		];
+
+		const result = weekDates.map((date) => {
+			const log = logs.find(
+				(l) => l.date.toDateString() === date.toDateString(),
+			);
+
+			let status: "streak" | "freeze" | "missed" = "missed";
+			if (log?.isStreak) status = "streak";
+			else if (log?.isFreeze) status = "freeze";
+
+			return {
+				day: dayNames[date.getDay()],
+				date: date.toISOString().split("T")[0],
+				status,
+			};
+		});
+
+		return result;
 	}
 }

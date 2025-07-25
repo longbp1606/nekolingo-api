@@ -35,6 +35,26 @@ export class UserProgressController {
 		return this.userStreakService.updateStreak(userObjectId);
 	}
 
+	@Get("weekly-streak/:userId")
+	@ApiOperation({
+		summary: "Lấy trạng thái streak trong tuần hiện tại và số ngày streak",
+	})
+	async getWeeklyStreak(@Param("userId") userId: string) {
+		const userObjectId = new Types.ObjectId(userId);
+
+		const weekStatus =
+			await this.userStreakService.getWeeklyStreakStatus(userObjectId);
+
+		const user = await this.userStreakService.getUserById(userObjectId);
+
+		return {
+			streak_days: user.streak_days,
+			is_freeze: user.is_freeze,
+			freeze_count: user.freeze_count,
+			week: weekStatus,
+		};
+	}
+
 	@Get("heart-recovery-lesson/:userId")
 	@ApiOperation({ summary: "Lấy 1 bài học hồi phục tim, ngẫu nhiên từ đã học" })
 	@ApiParam({ name: "userId", description: "ID của người dùng" })
