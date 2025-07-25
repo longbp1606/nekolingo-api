@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
-import { ExerciseModel } from "@db/models";
-import { UserExerciseProgressModel } from "@db/models";
+import { ExerciseModel, UserExerciseProgressModel } from "@db/models";
 import { GeminiService } from "@modules/ai/gemini.service";
 import { buildExplainAnswerPrompt } from "@modules/ai/prompt-templates";
 
@@ -15,8 +14,8 @@ export class ExplainService {
 	): Promise<{
 		explanation: string;
 		grammar?: string;
-		correct_answer: any;
-		user_answer?: string;
+		correct_answer: string | string[] | number | object | object[];
+		user_answer?: string | string[] | number | object | object[];
 		is_mistake: boolean;
 	}> {
 		const progress = await UserExerciseProgressModel.findOne({
@@ -24,11 +23,15 @@ export class ExplainService {
 			exercise_id: new Types.ObjectId(exerciseId),
 		});
 
-		if (!progress) throw new Error("Không tìm thấy tiến trình của người học.");
+		if (!progress) {
+			throw new Error("Không tìm thấy tiến trình của người học.");
+		}
 
 		const exercise =
 			await ExerciseModel.findById(exerciseId).populate("grammar");
-		if (!exercise) throw new Error("Không tìm thấy bài tập.");
+		if (!exercise) {
+			throw new Error("Không tìm thấy bài tập.");
+		}
 
 		const grammarName =
 			typeof exercise.grammar === "object" && exercise.grammar !== null
@@ -37,7 +40,7 @@ export class ExplainService {
 
 		const prompt = buildExplainAnswerPrompt({
 			question: exercise.question,
-			correctAnswer: JSON.stringify(exercise.correct_answer),
+			correctAnswer: exercise.correct_answer,
 			userAnswer: progress.user_answer ?? "",
 			grammarName,
 			isMistake: progress.is_mistake === true,
@@ -49,7 +52,7 @@ export class ExplainService {
 			explanation,
 			grammar: grammarName,
 			correct_answer: exercise.correct_answer,
-			user_answer: progress.user_answer ?? "",
+			user_answer: progress.user_answer,
 			is_mistake: progress.is_mistake === true,
 		};
 	}
