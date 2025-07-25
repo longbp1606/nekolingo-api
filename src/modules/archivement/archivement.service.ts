@@ -31,4 +31,8 @@ export class ArchivementService {
 		const archivement = new ArchivementModel(dto);
 		await archivement.save();
 	}
+
+	async getAllArchivements(): Promise<any[]> {
+		return ArchivementModel.find().lean();
+	}
 }
