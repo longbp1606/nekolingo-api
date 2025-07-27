@@ -46,13 +46,17 @@ export class QuestService {
 		const existing = await DailyQuestModel.find({
 			user_id: userIdStr,
 			createdAt: { $gte: start, $lte: end },
-		});
+		}).sort({ createdAt: -1 });
 
-		if (existing.length > 0) {
-			return existing;
+		if (existing.length >= 3) {
+			return existing.slice(0, 3);
 		}
 
-		const quests = await QuestModel.aggregate([{ $sample: { size: 3 } }]);
+		const needCount = 3 - existing.length;
+
+		const quests = await QuestModel.aggregate([
+			{ $sample: { size: needCount } },
+		]);
 
 		const newQuests = quests.map((q) => ({
 			user_id: userIdStr,
@@ -60,7 +64,9 @@ export class QuestService {
 			is_completed: false,
 		}));
 
-		return DailyQuestModel.insertMany(newQuests);
+		const inserted = await DailyQuestModel.insertMany(newQuests);
+
+		return [...existing, ...inserted];
 	}
 
 	async getDailyQuestsForUser(userId: string) {
