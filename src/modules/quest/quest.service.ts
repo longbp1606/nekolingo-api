@@ -8,31 +8,55 @@ import {
 	QuestModel,
 	UserModel,
 	UserStreakProgressModel,
+	UserLessonProgressModel,
+	UserExerciseProgressModel,
 } from "@db/models";
 import { CreateQuestRequest } from "./dto/create-quest.request";
 import { Types } from "mongoose";
-import { UserLessonProgressModel, UserExerciseProgressModel } from "@db/models";
-import { startOfDay, endOfDay } from "date-fns";
+
 @Injectable()
 export class QuestService {
+	private getTodayRangeInUTC_GMT7() {
+		const now = new Date();
+		const start = new Date(
+			Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), -7, 0, 0),
+		);
+		const end = new Date(
+			Date.UTC(
+				now.getFullYear(),
+				now.getMonth(),
+				now.getDate(),
+				16,
+				59,
+				59,
+				999,
+			),
+		);
+		return { start, end };
+	}
+
 	async getAllQuests() {
 		return QuestModel.find().sort({ createdAt: -1 });
 	}
+
 	async generateDailyQuestsForUser(userId: string) {
 		const userIdStr = userId.toString();
-		const todayStart = startOfDay(new Date());
-		const todayEnd = endOfDay(new Date());
+		const { start, end } = this.getTodayRangeInUTC_GMT7();
 
 		const existing = await DailyQuestModel.find({
 			user_id: userIdStr,
-			createdAt: { $gte: todayStart, $lte: todayEnd },
-		});
+			createdAt: { $gte: start, $lte: end },
+		}).sort({ createdAt: -1 });
 
-		if (existing.length > 0) {
-			return existing;
+		if (existing.length >= 3) {
+			return existing.slice(0, 3);
 		}
 
-		const quests = await QuestModel.aggregate([{ $sample: { size: 3 } }]);
+		const needCount = 3 - existing.length;
+
+		const quests = await QuestModel.aggregate([
+			{ $sample: { size: needCount } },
+		]);
 
 		const newQuests = quests.map((q) => ({
 			user_id: userIdStr,
@@ -40,29 +64,34 @@ export class QuestService {
 			is_completed: false,
 		}));
 
-		return DailyQuestModel.insertMany(newQuests);
+		const inserted = await DailyQuestModel.insertMany(newQuests);
+
+		return [...existing, ...inserted];
 	}
 
 	async getDailyQuestsForUser(userId: string) {
 		const userIdStr = userId.toString();
-		const todayStart = startOfDay(new Date());
-		const todayEnd = endOfDay(new Date());
+		const { start, end } = this.getTodayRangeInUTC_GMT7();
 
 		const dailyQuests = await DailyQuestModel.find({
 			user_id: userIdStr,
-			createdAt: { $gte: todayStart, $lte: todayEnd },
+			createdAt: { $gte: start, $lte: end },
 		})
+			.sort({ createdAt: -1 })
+			.limit(3)
 			.populate("quest_id")
 			.lean();
 
-		const lessons = await UserLessonProgressModel.find({
-			user_id: userIdStr,
-			completed_at: { $gte: todayStart, $lte: todayEnd },
-		});
-		const exercises = await UserExerciseProgressModel.find({
-			user_id: userIdStr,
-			completed_at: { $gte: todayStart, $lte: todayEnd },
-		});
+		const [lessons, exercises] = await Promise.all([
+			UserLessonProgressModel.find({
+				user_id: userIdStr,
+				completed_at: { $gte: start, $lte: end },
+			}),
+			UserExerciseProgressModel.find({
+				user_id: userIdStr,
+				completed_at: { $gte: start, $lte: end },
+			}),
+		]);
 
 		const result = dailyQuests.map((dq) => {
 			const quest = dq.quest_id as any;
@@ -123,7 +152,7 @@ export class QuestService {
 				"Score must be between 0-100 for Result quest",
 			);
 		}
-		return await QuestModel.create(dto);
+		return QuestModel.create(dto);
 	}
 
 	async updateQuest(id: string, dto: Partial<CreateQuestRequest>) {
@@ -142,23 +171,24 @@ export class QuestService {
 
 	async checkAndCompleteDailyQuests(userId: string | Types.ObjectId) {
 		const userIdStr = userId.toString();
-		const todayStart = startOfDay(new Date());
-		const todayEnd = endOfDay(new Date());
+		const { start, end } = this.getTodayRangeInUTC_GMT7();
 
 		const dailyQuests = await DailyQuestModel.find({
 			user_id: userIdStr,
 			is_completed: false,
+			createdAt: { $gte: start, $lte: end },
 		}).populate("quest_id");
 
-		const lessons = await UserLessonProgressModel.find({
-			user_id: userIdStr,
-			completed_at: { $gte: todayStart, $lte: todayEnd },
-		});
-
-		const exercises = await UserExerciseProgressModel.find({
-			user_id: userIdStr,
-			completed_at: { $gte: todayStart, $lte: todayEnd },
-		});
+		const [lessons, exercises] = await Promise.all([
+			UserLessonProgressModel.find({
+				user_id: userIdStr,
+				completed_at: { $gte: start, $lte: end },
+			}),
+			UserExerciseProgressModel.find({
+				user_id: userIdStr,
+				completed_at: { $gte: start, $lte: end },
+			}),
+		]);
 
 		for (const dq of dailyQuests) {
 			const quest = dq.quest_id as any;

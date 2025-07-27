@@ -85,7 +85,7 @@ export class TaskScheduler {
 		console.log(`[Streak] Updated: ${success}, Failed: ${failed}`);
 	}
 
-	@Cron("0 * * * *") // Mỗi giờ
+	@Cron("*/5 * * * *") // Mỗi 5 phút
 	async autoGeneratePersonalizedLessons() {
 		const users = await UserModel.find({}, "_id");
 
@@ -98,7 +98,7 @@ export class TaskScheduler {
 		);
 
 		const success = results.filter((r) => r.status === "fulfilled").length;
-		console.log(`[PersonalizedLesson] Created for ${success} users this hour`);
+		console.log(`[PersonalizedLesson] Created for ${success} users this run`);
 	}
 
 	@Cron("10 0 * * *") // Mỗi ngày lúc 00:10
