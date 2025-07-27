@@ -156,7 +156,18 @@ export class UserService {
 	}
 
 	async updateUser(id: string, dto: UpdateUserRequest) {
-		await UserModel.findByIdAndUpdate(id, dto);
+		const user = await UserModel.findById(id);
+		if (!user) return;
+
+		const newBalance =
+			dto.balance !== undefined
+				? (user.balance || 0) + dto.balance
+				: user.balance;
+
+		await UserModel.findByIdAndUpdate(id, {
+			...dto,
+			balance: newBalance,
+		});
 	}
 
 	async deleteUser(id: string) {
