@@ -3,11 +3,14 @@ import { CreateUserArchivementRequest } from "./dto";
 import { ValidationError } from "class-validator";
 import { UserArchivementModel, UserModel, ArchivementModel } from "@db/models";
 import { ApiValidationError } from "@errors";
+import { archivementHandlers } from "src/utils/archivement.util";
+import { ArchivementCondition } from "src/utils/types";
 
 @Injectable()
 export class UserArchivementService {
 	async validateBeforeCreate(dto: CreateUserArchivementRequest) {
 		const errors: ValidationError[] = [];
+
 		const [userExists, archivementExists, alreadyUnlocked] = await Promise.all([
 			UserModel.exists({ _id: dto.user_id }),
 			ArchivementModel.exists({ _id: dto.archivement_id }),
@@ -61,8 +64,45 @@ export class UserArchivementService {
 	}
 
 	async getUserArchivements(userId: string) {
-		return UserArchivementModel.find({ user_id: userId })
-			.populate("archivement_id")
-			.exec();
+		const user = await UserModel.findById(userId);
+		if (!user) return [];
+
+		const archivements = await ArchivementModel.find().lean();
+		const userArchivements = await UserArchivementModel.find({
+			user_id: userId,
+		}).lean();
+
+		const unlockedMap = new Map(
+			userArchivements.map((ua) => [ua.archivement_id.toString(), ua]),
+		);
+
+		return await Promise.all(
+			archivements.map(async (arch) => {
+				const condition = arch.condition as unknown as ArchivementCondition;
+				const handler = archivementHandlers[condition.type];
+				const current = handler ? await handler(user, condition) : 0;
+				const target = condition.value ?? 1;
+
+				let unlocked: any = unlockedMap.get(arch._id.toString());
+
+				if (!unlocked && current >= target) {
+					await this.createUserArchivement({
+						user_id: user._id.toString(),
+						archivement_id: arch._id.toString(),
+						unlock_at: new Date(),
+					});
+
+					unlocked = { unlock_at: new Date() };
+				}
+
+				return {
+					...arch,
+					progress: current,
+					progress_text: `${current}/${target}`,
+					is_unlocked: !!unlocked,
+					unlock_at: unlocked?.unlock_at || null,
+				};
+			}),
+		);
 	}
 }

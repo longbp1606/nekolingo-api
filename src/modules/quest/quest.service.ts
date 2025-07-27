@@ -19,18 +19,91 @@ export class QuestService {
 		return QuestModel.find().sort({ createdAt: -1 });
 	}
 	async generateDailyQuestsForUser(userId: string) {
+		const userIdStr = userId.toString();
+		const todayStart = startOfDay(new Date());
+		const todayEnd = endOfDay(new Date());
+
+		const existing = await DailyQuestModel.find({
+			user_id: userIdStr,
+			createdAt: { $gte: todayStart, $lte: todayEnd },
+		});
+
+		if (existing.length > 0) {
+			return existing;
+		}
+
 		const quests = await QuestModel.aggregate([{ $sample: { size: 3 } }]);
-		return DailyQuestModel.insertMany(
-			quests.map((q) => ({
-				user_id: userId,
-				quest_id: q._id,
-				is_completed: false,
-			})),
-		);
+
+		const newQuests = quests.map((q) => ({
+			user_id: userIdStr,
+			quest_id: q._id,
+			is_completed: false,
+		}));
+
+		return DailyQuestModel.insertMany(newQuests);
 	}
 
 	async getDailyQuestsForUser(userId: string) {
-		return DailyQuestModel.find({ user_id: userId }).populate("quest_id");
+		const userIdStr = userId.toString();
+		const todayStart = startOfDay(new Date());
+		const todayEnd = endOfDay(new Date());
+
+		const dailyQuests = await DailyQuestModel.find({
+			user_id: userIdStr,
+			createdAt: { $gte: todayStart, $lte: todayEnd },
+		})
+			.populate("quest_id")
+			.lean();
+
+		const lessons = await UserLessonProgressModel.find({
+			user_id: userIdStr,
+			completed_at: { $gte: todayStart, $lte: todayEnd },
+		});
+		const exercises = await UserExerciseProgressModel.find({
+			user_id: userIdStr,
+			completed_at: { $gte: todayStart, $lte: todayEnd },
+		});
+
+		const result = dailyQuests.map((dq) => {
+			const quest = dq.quest_id as any;
+			let progress = 0;
+
+			switch (quest.type) {
+				case "Complete":
+					progress = lessons.length;
+					break;
+
+				case "Time":
+					const totalSeconds = exercises.reduce(
+						(sum, ex) => sum + (ex.answer_time ?? 0),
+						0,
+					);
+					progress = Math.floor(totalSeconds / 60);
+					break;
+
+				case "Result":
+					const validLessons = lessons.filter(
+						(l) => (l.score ?? 0) >= quest.score,
+					);
+					progress = validLessons.length;
+					break;
+
+				case "XP":
+					progress = lessons.reduce((sum, l) => sum + (l.xp_earned ?? 0), 0);
+					break;
+			}
+
+			return {
+				...dq,
+				quest_id: {
+					...quest,
+					progress,
+					progress_text: `${progress}/${quest.condition}`,
+				},
+			};
+		});
+
+		return result;
 	}
 
 	async completeQuest(userId: string, questId: string) {
