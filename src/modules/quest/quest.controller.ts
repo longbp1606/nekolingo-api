@@ -70,4 +70,12 @@ export class QuestController {
 	async delete(@Param("id") id: string) {
 		return this.questService.deleteQuest(id);
 	}
+
+	@Get(":id")
+	@ApiOperation({ summary: "Lấy chi tiết quest theo ID (admin)" })
+	@ApiParam({ name: "id", required: true })
+	@UseGuards(AuthGuard)
+	async getDetail(@Param("id") id: string) {
+		return this.questService.getQuestDetail(id);
+	}
 }
