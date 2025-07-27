@@ -59,11 +59,23 @@ export class PersonalizedLessonService {
 		})
 			.sort({ completed_at: -1 })
 			.limit(10)
-			.populate("exercise_id");
+			.populate({
+				path: "exercise_id",
+				populate: { path: "lesson", model: "Lesson" },
+			});
 
 		if (!mistakenProgresses.length) {
 			throw new Error("Không có lỗi sai nào để tạo bài học.");
 		}
+
+		const firstExercise = mistakenProgresses[0]?.exercise_id as any;
+		const sourceLesson = firstExercise?.lesson as any;
+
+		if (!sourceLesson?.topic) {
+			throw new Error("Không xác định được topic của bài học gốc.");
+		}
+
+		const topicId = sourceLesson.topic;
 
 		const mistakeSummary = mistakenProgresses
 			.map((p, i) => {
@@ -89,14 +101,13 @@ Tạo **3 câu hỏi cho mỗi dạng** trong các dạng sau (tổng 15 câu):
 1. **fill_in_blank** – Chọn từ đúng để điền vào chỗ trống
 2. **match** – Nối hai cột nội dung tương ứng (như từ và nghĩa, hoặc chủ đề và ví dụ)
 3. **reorder** – Xếp lại các mảnh ghép thành câu hoàn chỉnh
-4. **image_select** – Chọn hình ảnh phù hợp nhất với yêu cầu
-5. **multiple_choice** – Chọn đáp án đúng trong nhiều lựa chọn
+4. **multiple_choice** – Chọn đáp án đúng trong nhiều lựa chọn
 
 🖼 Với các câu dạng \`image_select\`:
 - Các hình ảnh nên là ảnh thực tế.
 - Cung cấp **URL thật từ Google Images** hoặc nguồn ảnh tương tự, phù hợp với chủ đề câu hỏi và đáp án.
 
-📦 Trả về JSON với định dạng:
+📦 Trả về JSON với định dạng như sau:
 
 {
   "title": "Tên bài học",
@@ -126,19 +137,8 @@ Tạo **3 câu hỏi cho mỗi dạng** trong các dạng sau (tổng 15 câu):
       "question_format": "reorder",
       "type": "grammar",
       "question": "Arrange the words to form a correct sentence.",
-      "options": ["Although", "raining", "he", "went", "was", "out"],
+      "options": ["Although", "it", "was", "raining", "he", "went", "out"],
       "correct_answer": "Although it was raining, he went out"
-    },
-    {
-      "question_format": "image_select",
-      "type": "vocabulary",
-      "question": "Which one shows someone riding a bicycle?",
-      "options": [
-        { "image": "https://example.com/bike1.jpg", "value": "riding" },
-        { "image": "https://example.com/swim.jpg", "value": "swimming" },
-        { "image": "https://example.com/run.jpg", "value": "running" }
-      ],
-      "correct_answer": "riding"
     },
     {
       "question_format": "multiple_choice",
@@ -172,21 +172,28 @@ Chỉ trả lại JSON, không cần giải thích.
 			throw new Error("AI không trả về danh sách bài tập hợp lệ");
 		}
 
-		return this.createLessonFromAiJson(parsed, userId);
+		return this.createLessonFromAiJson(parsed, userId, topicId);
 	}
 
 	private async createLessonFromAiJson(
 		parsed: any,
 		userId: string,
+		topicId: string | Types.ObjectId,
 	): Promise<string> {
+		const maxOrderLesson = await LessonModel.findOne({ topic: topicId })
+			.sort({ order: -1 })
+			.select("order");
+
+		const nextOrder = maxOrderLesson ? maxOrderLesson.order + 1 : 1;
+
 		const lesson = await LessonModel.create({
 			title: parsed.title || "Luyện tập AI",
 			description: parsed.description || "",
 			type: ["grammar"],
 			mode: "personalized",
-			order: 1,
+			order: nextOrder,
 			xp_reward: 10,
-			topic: new Types.ObjectId(),
+			topic: new Types.ObjectId(topicId),
 			extra_data: {
 				generated_from: "ai_bulk_mistakes",
 				user_id: userId,
