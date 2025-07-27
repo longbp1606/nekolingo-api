@@ -341,7 +341,10 @@ export class UserProgressService {
 				);
 			}
 
-			return JSON.stringify(correct) === JSON.stringify(userAnswer);
+			return (
+				JSON.stringify(correct).toLowerCase() ===
+				JSON.stringify(userAnswer).toLowerCase()
+			);
 		}
 
 		if (
