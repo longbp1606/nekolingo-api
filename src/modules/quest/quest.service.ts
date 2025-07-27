@@ -268,4 +268,11 @@ export class QuestService {
 			}
 		}
 	}
+
+	async getQuestDetail(id: string) {
+		if (!Types.ObjectId.isValid(id)) throw new NotFoundException("Invalid ID");
+		const quest = await QuestModel.findById(id);
+		if (!quest) throw new NotFoundException("Quest not found");
+		return quest;
+	}
 }

@@ -67,4 +67,12 @@ export class ArchivementService {
 
 		await ArchivementModel.findByIdAndDelete(id);
 	}
+
+	async getArchivementDetail(id: string) {
+		const archivement = await ArchivementModel.findById(id).lean();
+		if (!archivement) {
+			throw new NotFoundException("Archivement not found");
+		}
+		return archivement;
+	}
 }

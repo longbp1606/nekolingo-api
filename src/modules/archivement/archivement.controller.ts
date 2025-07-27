@@ -53,4 +53,11 @@ export class ArchivementController {
 		await this.archivementService.deleteArchivement(id);
 		return new ApiResponseDto(null, null, "Archivement deleted successfully");
 	}
+
+	@Get(":id")
+	@SwaggerApiResponse(Object)
+	async getArchivementDetail(@Param("id") id: string) {
+		const detail = await this.archivementService.getArchivementDetail(id);
+		return new ApiResponseDto(detail);
+	}
 }
