@@ -1,11 +1,12 @@
 import { UserDocumentType } from "@db/models";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsStrongPassword } from "class-validator";
+import { IsEmail, IsOptional, IsStrongPassword } from "class-validator";
 import { UserResponse } from "./user.response";
 
 export class CreateUserRequest {
 	@ApiProperty({ example: "user@gmail.com" })
 	@IsEmail()
+	@IsOptional()
 	email: string;
 
 	@ApiProperty({ example: "User@123" })
@@ -16,6 +17,7 @@ export class CreateUserRequest {
 		minNumbers: 1,
 		minSymbols: 1,
 	})
+	@IsOptional()
 	password: string;
 
 	@ApiProperty({ example: 0 })
