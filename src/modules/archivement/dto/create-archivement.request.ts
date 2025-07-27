@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, IsObject } from "class-validator";
 
 export class CreateArchivementRequest {
 	@ApiProperty()
@@ -17,7 +17,14 @@ export class CreateArchivementRequest {
 	@IsString()
 	icon: string;
 
-	@ApiProperty()
+	@ApiProperty({
+		type: Object,
+		example: {
+			type: "complete_lessons",
+			value: 10,
+		},
+	})
 	@IsNotEmpty()
-	condition: JSON;
+	@IsObject()
+	condition: Record<string, any>;
 }
