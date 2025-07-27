@@ -103,9 +103,6 @@ Tạo **3 câu hỏi cho mỗi dạng** trong các dạng sau (tổng 15 câu):
 3. **reorder** – Xếp lại các mảnh ghép thành câu hoàn chỉnh
 4. **multiple_choice** – Chọn đáp án đúng trong nhiều lựa chọn
 
-🖼 Với các câu dạng \`image_select\`:
-- Các hình ảnh nên là ảnh thực tế.
-- Cung cấp **URL thật từ Google Images** hoặc nguồn ảnh tương tự, phù hợp với chủ đề câu hỏi và đáp án.
 
 📦 Trả về JSON với định dạng như sau:
 
