@@ -51,7 +51,7 @@ export class UserStreakService {
 					{ upsert: true },
 				);
 
-				user.freeze_count -= 1;
+				user.freeze_count = Math.max(0, user.freeze_count - 1);
 				user.is_freeze = true;
 			} else {
 				user.streak_days = 1;
@@ -88,7 +88,7 @@ export class UserStreakService {
 				);
 			}
 
-			user.freeze_count -= neededFreeze;
+			user.freeze_count = Math.max(0, user.freeze_count - neededFreeze);
 			user.is_freeze = true;
 		} else {
 			user.streak_days = 0;
