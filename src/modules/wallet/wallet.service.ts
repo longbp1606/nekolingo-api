@@ -19,7 +19,7 @@ export class WalletService {
 		const txnRef = `${Date.now()}_${userId}`;
 
 		return this.vnpayService.buildPaymentUrl({
-			vnp_Amount: amount * 100,
+			vnp_Amount: amount,
 			vnp_TxnRef: txnRef,
 			vnp_OrderInfo: "Nạp tiền vào tài khoản",
 			vnp_IpAddr: ip || "127.0.0.1",
@@ -94,9 +94,6 @@ export class WalletService {
 	}
 
 	private convertVndToGem(amount: number): number {
-		if (amount >= 200_000) return 2800;
-		if (amount >= 100_000) return 1300;
-		if (amount >= 50_000) return 600;
 		return Math.floor((amount * 10) / 1000); // 1.000₫ = 10 gem
 	}
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { isValidObjectId } from "mongoose";
-import { VocabularyModel, VocabTopicModel, LanguageModel } from "@db/models";
+import { VocabularyModel, LanguageModel, ExerciseModel } from "@db/models";
 import { CreateVocabularyRequest, UpdateVocabularyRequest } from "./dto";
 import { ApiValidationError, ApiError } from "@errors";
 import { ValidationError } from "class-validator";
@@ -188,15 +188,15 @@ export class VocabularyService {
 	}
 
 	async validateBeforeDelete(id: string) {
-		const vocabTopicReferences = await VocabTopicModel.countDocuments({
+		const referencedExercises = await ExerciseModel.countDocuments({
 			vocabulary_id: id,
 		});
 
-		if (vocabTopicReferences > 0) {
+		if (referencedExercises > 0) {
 			throw new ApiError({
 				code: "conflict",
-				message: `Cannot delete this vocabulary. It is referenced by ${vocabTopicReferences} topic(s). Please remove those references first.`,
-				detail: { references: vocabTopicReferences },
+				message: `Cannot delete this vocabulary. It is referenced by ${referencedExercises} exercise(s). Please remove those references first.`,
+				detail: { references: referencedExercises },
 				status: 409,
 			});
 		}

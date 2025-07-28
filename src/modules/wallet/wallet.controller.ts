@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { WalletService } from "./wallet.service";
 import { CreateDepositRequest } from "./dto";
 import { ApiTags, ApiBearerAuth, ApiBody, ApiOperation } from "@nestjs/swagger";
+import { SkipAuth } from "@modules/auth";
 
 @ApiTags("Wallet")
 @ApiBearerAuth()
@@ -31,6 +32,7 @@ export class WalletController {
 	}
 
 	@Get("vnpay/return")
+	@SkipAuth()
 	@ApiOperation({ summary: "Xử lý callback từ VNPAY sau khi thanh toán" })
 	async handleReturn(
 		@Query() query: Record<string, string>,
