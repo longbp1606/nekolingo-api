@@ -217,9 +217,9 @@ export class CourseService {
 			throw new NotFoundException(`Course with ID ${id} not found`);
 		}
 
-		const hasLessons = await LessonModel.exists({ course: id });
-		if (hasLessons) {
-			throw new BadRequestException("Cannot delete course that has lessons");
+		const hasTopics = await TopicModel.exists({ course: id });
+		if (hasTopics) {
+			throw new BadRequestException("Cannot delete course that has topics");
 		}
 
 		await course.deleteOne();

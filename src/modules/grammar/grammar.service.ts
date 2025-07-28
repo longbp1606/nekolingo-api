@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { GrammarModel, VocabTopicModel } from "@db/models";
+import { ExerciseModel, GrammarModel, VocabTopicModel } from "@db/models";
 import { CreateGrammarRequest, UpdateGrammarRequest } from "./dto";
 import { PaginationDto } from "@utils";
 import { ApiValidationError, ApiError } from "@errors";
@@ -73,13 +73,14 @@ export class GrammarService {
 	}
 
 	async validateBeforeDelete(id: string) {
-		const references = await VocabTopicModel.countDocuments({
+		const references = await ExerciseModel.countDocuments({
 			grammar_id: id,
 		});
+
 		if (references > 0) {
 			throw new ApiError({
 				code: "reference_constraint",
-				message: `Cannot delete grammar. It is referenced by ${references} VocabTopic(s). Please remove these references first.`,
+				message: `Cannot delete grammar. It is referenced by ${references} exercise(s). Please remove these references first.`,
 				detail: { references },
 				status: 400,
 			});
