@@ -164,8 +164,21 @@ export class QuestService {
 
 	async deleteQuest(id: string) {
 		if (!Types.ObjectId.isValid(id)) throw new NotFoundException("Invalid ID");
-		const deleted = await QuestModel.findByIdAndDelete(id);
-		if (!deleted) throw new NotFoundException("Quest not found");
+
+		const quest = await QuestModel.findById(id);
+		if (!quest) throw new NotFoundException("Quest not found");
+
+		const inUseCount = await DailyQuestModel.countDocuments({
+			quest_id: id,
+			is_completed: false,
+		});
+		if (inUseCount > 0) {
+			throw new BadRequestException(
+				`Cannot delete quest. It is still assigned to ${inUseCount} active daily quest(s).`,
+			);
+		}
+
+		await QuestModel.findByIdAndDelete(id);
 		return { message: "Deleted successfully" };
 	}
 

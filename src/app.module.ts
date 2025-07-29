@@ -27,6 +27,7 @@ import { ImageModule } from "@modules/image";
 import { UserStreakModule } from "@modules/user-streak/user-streak.module";
 import { AiModule } from "@modules/ai/ai.module";
 import { ShopModule } from "@modules/shop/shop.module";
+import { TransactionModule } from "@modules/transaction/transaction.module";
 
 @Module({
 	imports: [
@@ -60,6 +61,7 @@ import { ShopModule } from "@modules/shop/shop.module";
 		UserStreakModule,
 		AiModule,
 		ShopModule,
+		TransactionModule,
 	],
 	controllers: [],
 	providers: [
