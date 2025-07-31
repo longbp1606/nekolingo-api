@@ -21,6 +21,7 @@ export interface IUser {
 	is_premiere: boolean;
 	balance: number;
 	is_active: boolean;
+	email_verify_token?: string;
 	double_or_nothing?: {
 		start_date: Date;
 		is_active: boolean;
@@ -57,6 +58,7 @@ const UserSchema = new Schema<IUser, UserModelType>(
 		is_premiere: { type: Boolean, default: false },
 		balance: { type: Number, default: 0 },
 		is_active: { type: Boolean, default: true },
+		email_verify_token: { type: String, required: false },
 		double_or_nothing: {
 			type: {
 				start_date: { type: Date, required: true },

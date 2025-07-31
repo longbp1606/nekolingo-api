@@ -15,6 +15,10 @@ import { EmailNotFoundError, WrongPasswordError } from "./errors";
 import * as bcrypt from "bcrypt";
 import { ExistedEmailError } from "./errors/existed-email.error";
 import { SetupRegisterRequest } from "./dto/setup-register.request";
+import { randomBytes } from "crypto";
+import { sendVerificationEmail } from "src/utils/mailer";
+
+const emailToken = randomBytes(32).toString("hex");
 
 @Injectable()
 export class AuthService {
@@ -50,6 +54,8 @@ export class AuthService {
 	async basicLogin(dto: BasicLoginRequest) {
 		const user = await UserModel.findOne({ email: dto.email });
 		if (!user) throw new EmailNotFoundError();
+		if (!user.is_active)
+			throw new Error("Tài khoản của bạn đã bị vô hiệu hóa.");
 		if (!bcrypt.compareSync(dto.password, user.password))
 			throw new WrongPasswordError();
 		return this.issueTokenPair(user._id, user.role);
@@ -62,7 +68,11 @@ export class AuthService {
 		await UserModel.create({
 			...dto,
 			password: encryptedPassword,
+			email_verify_token: emailToken,
+			is_active: false,
 		});
+
+		await sendVerificationEmail(dto.email, emailToken);
 	}
 
 	async setupRegister(dto: SetupRegisterRequest) {
@@ -73,7 +83,6 @@ export class AuthService {
 		const languageFrom = await LanguageModel.findOne({
 			code: dto.language_from,
 		});
-
 		const languageTo = await LanguageModel.findOne({
 			code: dto.language_to,
 		});
@@ -96,10 +105,13 @@ export class AuthService {
 			current_level: dto.current_level,
 			language_from: languageFrom._id,
 			language_to: languageTo._id,
-			is_active: true,
 			current_course: currentCourse._id,
 			current_topic: currentTopic[0]._id,
 			current_lesson: currentLesson[0]._id,
+			email_verify_token: emailToken,
+			is_active: false,
 		});
+
+		await sendVerificationEmail(dto.email, emailToken);
 	}
 }
