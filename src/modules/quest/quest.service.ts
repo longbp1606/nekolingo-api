@@ -265,11 +265,16 @@ export class QuestService {
 						break;
 
 					case "freeze":
-						await UserStreakProgressModel.updateOne(
-							{ userId: userIdStr, date: new Date() },
-							{ isFreeze: true },
-							{ upsert: true },
-						);
+						const user = await UserModel.findById(userIdStr);
+
+						if ((user.freeze_count ?? 0) >= 2) break;
+
+						const toAdd = Math.min(quest.reward.amount, 2 - user.freeze_count);
+						if (toAdd > 0) {
+							await UserModel.findByIdAndUpdate(userIdStr, {
+								$inc: { freeze_count: toAdd },
+							});
+						}
 						break;
 
 					case "gem":

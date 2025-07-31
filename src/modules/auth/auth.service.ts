@@ -83,7 +83,6 @@ export class AuthService {
 		const languageFrom = await LanguageModel.findOne({
 			code: dto.language_from,
 		});
-
 		const languageTo = await LanguageModel.findOne({
 			code: dto.language_to,
 		});
