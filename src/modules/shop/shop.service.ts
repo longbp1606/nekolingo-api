@@ -33,10 +33,9 @@ export class ShopService {
 
 		switch (item) {
 			case ShopItemType.STREAK_FREEZE:
-				if (user.is_freeze) {
-					throw new BadRequestException("Bạn đã có freeze đang hoạt động");
+				if (user.freeze_count >= 2) {
+					throw new BadRequestException("Bạn đã có tối đa 2 Freeze");
 				}
-				user.is_freeze = true;
 				user.freeze_count += 1;
 				break;
 

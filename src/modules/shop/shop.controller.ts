@@ -32,30 +32,31 @@ export class ShopController {
 	}
 
 	@Get("status")
-	@ApiOperation({ summary: "Xem trạng thái shop hiện tại của user" })
+	@ApiOperation({ summary: "Xem trạng thái vật phẩm và lịch sử mua items" })
 	async getShopStatus(@Req() req: Request & { user?: { id: string } }) {
 		const user = await UserModel.findById(req.user?.id);
+
+		const transactions = await ShopTransactionModel.find({ user: user._id })
+			.sort({ createdAt: -1 })
+			.select("item price createdAt");
 
 		return {
 			success: true,
 			status: {
-				is_freeze: user.is_freeze,
-				hearts: user.hearts,
-				streak_days: user.streak_days,
-				double_or_nothing: user.double_or_nothing ?? null,
+				freeze: {
+					quantity: user.freeze_count,
+					can_buy: user.freeze_count < 2,
+				},
+				double: {
+					active: user.double_or_nothing?.is_active ?? false,
+					can_buy: !(user.double_or_nothing?.is_active ?? false),
+				},
+				repair: {
+					available: user.streak_days === 0 && user.backup_streak_days > 0,
+					can_buy: true,
+				},
 			},
+			history: transactions,
 		};
-	}
-
-	@Get("history")
-	@ApiOperation({ summary: "Xem lịch sử mua item của user" })
-	async getPurchaseHistory(@Req() req: Request & { user?: { id: string } }) {
-		const transactions = await ShopTransactionModel.find({
-			user: req.user?.id,
-		})
-			.sort({ createdAt: -1 })
-			.select("item price createdAt");
-
-		return { success: true, history: transactions };
 	}
 }

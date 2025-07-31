@@ -51,6 +51,7 @@
 		"my-nest-template": "file:",
 		"nestjs-cls": "^6.0.1",
 		"nestjs-vnpay": "^1.0.1",
+		"nodemailer": "^7.0.5",
 		"reflect-metadata": "^0.1.13",
 		"rxjs": "^7.8.1",
 		"typeorm": "^0.3.19",
