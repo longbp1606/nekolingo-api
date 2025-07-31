@@ -15,8 +15,16 @@ export class WalletService {
 		private readonly configService: ConfigService,
 	) {}
 
-	createDepositUrl(userId: string, amount: number, ip: string): string {
+	createDepositUrl(
+		userId: string,
+		amount: number,
+		ip: string,
+		isMobile = false,
+	): string {
 		const txnRef = `${Date.now()}_${userId}`;
+		const returnUrl = isMobile
+			? this.configService.get<string>("VNP_RETURN_URL_MOBILE")!
+			: this.configService.get<string>("VNP_RETURN_URL")!;
 
 		return this.vnpayService.buildPaymentUrl({
 			vnp_Amount: amount,
@@ -25,7 +33,7 @@ export class WalletService {
 			vnp_IpAddr: ip || "127.0.0.1",
 			vnp_OrderType: ProductCode.Other,
 			vnp_Locale: VnpLocale.VN,
-			vnp_ReturnUrl: this.configService.get<string>("VNP_RETURN_URL")!,
+			vnp_ReturnUrl: returnUrl,
 		});
 	}
 
