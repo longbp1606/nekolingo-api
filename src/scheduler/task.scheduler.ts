@@ -32,11 +32,18 @@ export class TaskScheduler {
 		console.log(`[DailyQuest] Success: ${success}, Failed: ${failed}`);
 	}
 
-	@Cron("0 0 * * 1") // mỗi thứ 2 đầu tuần
+	@Cron("0 0 * * 1") // Mỗi thứ 2 lúc 00:00
 	async generateWeeklyLeaderboard() {
-		await this.leaderboardService.createWeeklyLeaderboard();
-		await UserModel.updateMany({}, { $set: { weekly_xp: 0 } });
-		console.log("[Leaderboard] Weekly leaderboard created and XP reset");
+		const created = await this.leaderboardService.createWeeklyLeaderboard();
+
+		if (created) {
+			await UserModel.updateMany({}, { $set: { weekly_xp: 0 } });
+			console.log("[Leaderboard] Weekly leaderboard created and XP reset");
+		} else {
+			console.log(
+				"[Leaderboard] Weekly leaderboard already exists, no action taken",
+			);
+		}
 	}
 
 	@Cron("5 0 * * *") // mỗi ngày lúc 00:05
