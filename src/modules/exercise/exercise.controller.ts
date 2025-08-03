@@ -65,6 +65,17 @@ export class ExerciseController {
 		return this.svc.getExercises(p, t);
 	}
 
+	@Get("list")
+	@ApiOperation({ summary: "Lấy toàn bộ bài tập (không phân trang)" })
+	@ApiResponse({
+		status: 200,
+		description: "Trả về toàn bộ bài tập",
+		type: [ExerciseModel],
+	})
+	async findAllWithoutPagination() {
+		return this.svc.getAllExercises();
+	}
+
 	@Get(":id")
 	@ApiOperation({ summary: "Lấy chi tiết một bài tập theo ID" })
 	@ApiParam({ name: "id", description: "ID của bài tập" })
