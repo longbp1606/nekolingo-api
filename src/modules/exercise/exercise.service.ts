@@ -103,6 +103,14 @@ export class ExerciseService {
 		return { exercises, pagination };
 	}
 
+	async getAllExercises() {
+		return await ExerciseModel.find()
+			.populate("lesson", "title")
+			.populate("vocabulary", "word")
+			.populate("grammar", "name")
+			.exec();
+	}
+
 	async getExerciseById(id: string) {
 		if (!Types.ObjectId.isValid(id)) {
 			throw new NotFoundException(`Invalid ID: ${id}`);
