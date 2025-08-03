@@ -19,7 +19,7 @@ export class TaskScheduler {
 
 	@Cron("0 0 * * *") // mỗi ngày lúc 00:00
 	async generateDailyQuest() {
-		const users = await UserModel.find({}, "_id");
+		const users = await UserModel.find({ role: { $nin: [1, 2] } }, "_id");
 
 		const results = await Promise.allSettled(
 			users.map((user) =>

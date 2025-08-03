@@ -16,22 +16,14 @@ import { Types } from "mongoose";
 
 @Injectable()
 export class QuestService {
-	private getTodayRangeInUTC_GMT7() {
+	private getTodayRangeInUTC() {
 		const now = new Date();
 		const start = new Date(
-			Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), -7, 0, 0),
+			Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
 		);
-		const end = new Date(
-			Date.UTC(
-				now.getFullYear(),
-				now.getMonth(),
-				now.getDate(),
-				16,
-				59,
-				59,
-				999,
-			),
-		);
+		const end = new Date(start);
+		end.setUTCDate(end.getUTCDate() + 1);
+		end.setUTCMilliseconds(end.getUTCMilliseconds() - 1);
 		return { start, end };
 	}
 
@@ -41,7 +33,7 @@ export class QuestService {
 
 	async generateDailyQuestsForUser(userId: string) {
 		const userIdStr = userId.toString();
-		const { start, end } = this.getTodayRangeInUTC_GMT7();
+		const { start, end } = this.getTodayRangeInUTC();
 
 		const existing = await DailyQuestModel.find({
 			user_id: userIdStr,
@@ -53,7 +45,6 @@ export class QuestService {
 		}
 
 		const needCount = 3 - existing.length;
-
 		const quests = await QuestModel.aggregate([
 			{ $sample: { size: needCount } },
 		]);
@@ -65,13 +56,12 @@ export class QuestService {
 		}));
 
 		const inserted = await DailyQuestModel.insertMany(newQuests);
-
 		return [...existing, ...inserted];
 	}
 
 	async getDailyQuestsForUser(userId: string) {
 		const userIdStr = userId.toString();
-		const { start, end } = this.getTodayRangeInUTC_GMT7();
+		const { start, end } = this.getTodayRangeInUTC();
 
 		const dailyQuests = await DailyQuestModel.find({
 			user_id: userIdStr,
@@ -101,7 +91,6 @@ export class QuestService {
 				case "Complete":
 					progress = lessons.length;
 					break;
-
 				case "Time":
 					const totalSeconds = exercises.reduce(
 						(sum, ex) => sum + (ex.answer_time ?? 0),
@@ -109,14 +98,12 @@ export class QuestService {
 					);
 					progress = Math.floor(totalSeconds / 60);
 					break;
-
 				case "Result":
 					const validLessons = lessons.filter(
 						(l) => (l.score ?? 0) >= quest.score,
 					);
 					progress = validLessons.length;
 					break;
-
 				case "XP":
 					progress = lessons.reduce((sum, l) => sum + (l.xp_earned ?? 0), 0);
 					break;
@@ -184,7 +171,7 @@ export class QuestService {
 
 	async checkAndCompleteDailyQuests(userId: string | Types.ObjectId) {
 		const userIdStr = userId.toString();
-		const { start, end } = this.getTodayRangeInUTC_GMT7();
+		const { start, end } = this.getTodayRangeInUTC();
 
 		const dailyQuests = await DailyQuestModel.find({
 			user_id: userIdStr,
@@ -213,7 +200,6 @@ export class QuestService {
 				case "Complete":
 					isCompleted = lessons.length >= quest.condition;
 					break;
-
 				case "Time":
 					const totalSeconds = exercises.reduce(
 						(sum, ex) => sum + (ex.answer_time ?? 0),
@@ -222,14 +208,12 @@ export class QuestService {
 					const totalMinutes = Math.floor(totalSeconds / 60);
 					isCompleted = totalMinutes >= quest.condition;
 					break;
-
 				case "Result":
 					const validLessons = lessons.filter(
 						(l) => (l.score ?? 0) >= quest.score,
 					);
 					isCompleted = validLessons.length >= quest.condition;
 					break;
-
 				case "XP":
 					const totalXP = lessons.reduce(
 						(sum, l) => sum + (l.xp_earned ?? 0),
@@ -251,22 +235,30 @@ export class QuestService {
 				switch (quest.reward?.type) {
 					case "xp":
 						await UserModel.findByIdAndUpdate(userIdStr, {
-							$inc: {
-								xp: quest.reward.amount,
-								weekly_xp: quest.reward.amount,
-							},
+							$inc: { xp: quest.reward.amount, weekly_xp: quest.reward.amount },
 						});
 						break;
-
 					case "heart":
-						await UserModel.findByIdAndUpdate(userIdStr, {
-							$inc: { hearts: quest.reward.amount },
-						});
+						const userHeart =
+							await UserModel.findById(userIdStr).select("hearts");
+						if (!userHeart) break;
+
+						const currentHearts = userHeart.hearts ?? 0;
+						const maxHearts = 5;
+
+						if (currentHearts < maxHearts) {
+							const toAdd = Math.min(
+								quest.reward.amount,
+								maxHearts - currentHearts,
+							);
+							await UserModel.findByIdAndUpdate(userIdStr, {
+								$inc: { hearts: toAdd },
+							});
+						}
 						break;
 
 					case "freeze":
 						const user = await UserModel.findById(userIdStr);
-
 						if ((user.freeze_count ?? 0) >= 2) break;
 
 						const toAdd = Math.min(quest.reward.amount, 2 - user.freeze_count);
@@ -276,7 +268,6 @@ export class QuestService {
 							});
 						}
 						break;
-
 					case "gem":
 						await UserModel.findByIdAndUpdate(userIdStr, {
 							$inc: { gems: quest.reward.amount },
