@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CreateUserRequest } from "./create-user.request";
-import { IsOptional, IsString, IsNumber } from "class-validator";
+import { IsOptional, IsString, IsNumber, IsBoolean } from "class-validator";
 
 export class UpdateUserRequest extends CreateUserRequest {
 	@ApiProperty()
@@ -12,4 +12,9 @@ export class UpdateUserRequest extends CreateUserRequest {
 	@IsOptional()
 	@IsNumber()
 	balance?: number;
+
+	@ApiProperty()
+	@IsOptional()
+	@IsBoolean()
+	is_active?: boolean;
 }

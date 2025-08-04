@@ -145,6 +145,10 @@ export class UserService {
 		};
 	}
 
+	async getInactiveUsers() {
+		return UserModel.find({ is_active: false });
+	}
+
 	async createUser(dto: CreateUserRequest) {
 		await this.validateBeforeCreate(dto);
 		const user = new UserModel({

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+	ForbiddenException,
+	Injectable,
+	NotFoundException,
+} from "@nestjs/common";
 import {
 	ExerciseModel,
 	LessonModel,
@@ -163,9 +167,18 @@ export class UserProgressService {
 			if (isCorrect) {
 				correctCount++;
 			} else {
-				await UserModel.findByIdAndUpdate(userId, {
-					$inc: { hearts: -1 },
+				const existing = await UserExerciseProgressModel.findOne({
+					user_id: userId,
+					exercise_id: exerciseId,
 				});
+
+				const alreadyMistake = existing?.is_mistake === true;
+
+				if (!alreadyMistake) {
+					await UserModel.findByIdAndUpdate(userId, {
+						$inc: { hearts: -1 },
+					});
+				}
 			}
 
 			await UserExerciseProgressModel.findOneAndUpdate(
@@ -198,7 +211,9 @@ export class UserProgressService {
 			},
 			{ upsert: true },
 		);
+
 		await this.userStreakService.updateStreak(userId);
+
 		return this.completeLesson({
 			user_id: dto.user_id,
 			lesson_id: dto.lesson_id,
@@ -288,6 +303,15 @@ export class UserProgressService {
 		const userId = new Types.ObjectId(dto.user_id);
 		const exerciseId = new Types.ObjectId(dto.exercise_id);
 
+		const user = await UserModel.findById(userId).select("hearts");
+		if (!user) throw new NotFoundException("User not found");
+
+		if ((user.hearts ?? 0) <= 0) {
+			throw new ForbiddenException(
+				"You have no hearts left. Please refill to continue.",
+			);
+		}
+
 		const exercise = await ExerciseModel.findById(exerciseId);
 		if (!exercise) throw new NotFoundException("Exercise not found");
 
@@ -308,10 +332,17 @@ export class UserProgressService {
 			{ upsert: true },
 		);
 
+		if (!isCorrect) {
+			await UserModel.findByIdAndUpdate(userId, {
+				$inc: { hearts: -1 },
+			});
+		}
+
 		await this.questService.checkAndCompleteDailyQuests(userId);
 		if (isCorrect) {
 			await this.userStreakService.updateStreak(userId);
 		}
+
 		return {
 			correct: isCorrect,
 			is_mistake: !isCorrect,

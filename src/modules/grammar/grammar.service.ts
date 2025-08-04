@@ -3,7 +3,7 @@ import { ExerciseModel, GrammarModel, VocabTopicModel } from "@db/models";
 import { CreateGrammarRequest, UpdateGrammarRequest } from "./dto";
 import { PaginationDto } from "@utils";
 import { ApiValidationError, ApiError } from "@errors";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, Types } from "mongoose";
 
 @Injectable()
 export class GrammarService {
@@ -73,8 +73,10 @@ export class GrammarService {
 	}
 
 	async validateBeforeDelete(id: string) {
+		const grammarObjectId = new Types.ObjectId(id);
+
 		const references = await ExerciseModel.countDocuments({
-			grammar_id: id,
+			grammar: grammarObjectId,
 		});
 
 		if (references > 0) {

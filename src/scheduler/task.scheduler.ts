@@ -92,7 +92,7 @@ export class TaskScheduler {
 		console.log(`[Streak] Updated: ${success}, Failed: ${failed}`);
 	}
 
-	@Cron("*/5 * * * *") // Mỗi 5 phút
+	@Cron("*/2 * * * *") // Mỗi 2 phút
 	async autoGeneratePersonalizedLessons() {
 		const users = await UserModel.find({}, "_id");
 
