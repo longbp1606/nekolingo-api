@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, Types } from "mongoose";
 import { VocabularyModel, LanguageModel, ExerciseModel } from "@db/models";
 import { CreateVocabularyRequest, UpdateVocabularyRequest } from "./dto";
 import { ApiValidationError, ApiError } from "@errors";
@@ -188,8 +188,10 @@ export class VocabularyService {
 	}
 
 	async validateBeforeDelete(id: string) {
+		const vocabObjectId = new Types.ObjectId(id);
+
 		const referencedExercises = await ExerciseModel.countDocuments({
-			vocabulary_id: id,
+			vocabulary: vocabObjectId,
 		});
 
 		if (referencedExercises > 0) {

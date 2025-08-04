@@ -35,6 +35,16 @@ export class UserController {
 		return new ApiResponseDto(users, null, "Get users successfully");
 	}
 
+	@Get("inactive")
+	@ApiOperation({
+		summary: "Lấy danh sách người dùng không hoạt động (is_active = false)",
+	})
+	@SwaggerApiResponse(Object)
+	async getInactiveUsers() {
+		const users = await this.userService.getInactiveUsers();
+		return new ApiResponseDto(users, null, "Get inactive users successfully");
+	}
+
 	@Get(":id")
 	@ApiOperation({
 		summary: "Lấy thông tin chi tiết người dùng bao gồm tiến độ học tập",
