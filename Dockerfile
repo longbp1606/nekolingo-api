@@ -1,5 +1,5 @@
 # Build with Yarn
-FROM node:20 AS builder
+FROM node:22 AS builder
 WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 RUN npm install -g pnpm
@@ -7,7 +7,7 @@ RUN pnpm install
 COPY . .
 RUN pnpm build
 
-FROM node:20 AS runner
+FROM node:22 AS runner
 WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 RUN npm install -g pnpm
